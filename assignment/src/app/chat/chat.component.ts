@@ -13,18 +13,18 @@ export class ChatComponent implements OnInit {
   messagecontent:string="";
   messages:string[] = [];
   ioConnection:any;
-  id = sessionStorage.getItem('id');
-  username = sessionStorage.getItem('username');
+  // id = sessionStorage.getItem('id');
+  username = localStorage.getItem('localStorage');
 
   constructor(private socketService:SocketService, private router: Router) { }
 
   ngOnInit(): void {
-    alert(sessionStorage.getItem('id'));
-    if (sessionStorage.getItem('id') != null){
+    alert(localStorage.getItem('localStorage'));
+    if (localStorage.getItem('localStorage') != null){
       this.initIoConnection();
     }
     else{
-      this.router.navigateByUrl('');
+      this.router.navigateByUrl('login');
     }
   }
 

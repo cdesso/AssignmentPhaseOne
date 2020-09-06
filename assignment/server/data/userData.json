@@ -2,5 +2,5 @@
     {   "username": "cdesso", "id": "0", "email": "casper@mail.com", "role": "SA"    },
     {   "username": "axela", "id": "1", "email": "alexa@mail.com", "role": "GA"    },
     {   "username": "donny96", "id": "2", "email": "TheDon@mail.com", "role": "GS"    },
-    {   "username": "bob1", "id": "3", "email": "casper@mail.com", "role": "U"    }
+    {   "username": "bob1", "id": "3", "email": "bobby@mail.com", "role": "U"    }
 ]
