@@ -34,11 +34,10 @@ export class LoginComponent implements OnInit {
     // else, prompt incorrect inputs and reset input fields.
     let user = {username: this.username, password: this.password};
     this.httpClient.post(BACKEND_URL + '/api/auth', user, httpOptions).subscribe((data:any)=>{
-      alert(data);
       if (data){
         this.error = "";
         localStorage.setItem('username', data.username);
-        // sessionStorage.setItem('id', data.id);
+        localStorage.setItem('role', data.role);
         // sessionStorage.setItem('username', data.username);
         // sessionStorage.setItem('birthdate', data.birthdate);
         // sessionStorage.setItem('age', data.age.toString());

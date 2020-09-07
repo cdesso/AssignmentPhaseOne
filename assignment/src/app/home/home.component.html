@@ -1,3 +1,8 @@
-<p>home works!</p>
-<button (click)="logout()" class="btn btn-info btn-md">Logout</button>
+
+<div class="container">
+    <p *ngIf="role == 'SA'">Super Admin access</p>
+    <p *ngIf="role == 'GA' || 'SA'">Group Admin access</p>
+    <p *ngIf="role == 'GS' || 'GA' || 'SA'">Group assiss access</p>
+    {{role}}
+</div>
 

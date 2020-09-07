@@ -7,19 +7,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  username = localStorage.getItem('username');
+  role = localStorage.getItem('role');
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-    if (localStorage.getItem('username') == null){
+    if (this.username == null){
       this.router.navigateByUrl('login');
     }
   }
-
-  logout(){
-    alert(localStorage.getItem('username'));
-    localStorage.clear();
-    this.router.navigateByUrl('/login');
-  }
-
 }
