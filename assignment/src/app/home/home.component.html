@@ -1,6 +1,49 @@
 
 <div class="container">
-    <p *ngIf="role == 'SA'">Super Admin access</p>
+    <div class="SA" *ngIf="role == 'SA'">
+        <div class="newUser">
+            <form id="userForm" class="form" method="post">
+                <h3 class="text-center text-info">New user creation</h3>
+                <div class="form-group">
+                    <label for="NewUsername" class="text-info">Username:</label><br>
+                    <input type="text" [(ngModel)]="NewUsername" name="NewUsername" id="NewUsername" class="form-control">
+                    <span class="error">{{UserError}}</span>
+                </div>
+                
+
+                <div class="form-group">
+                    <label for="NewEmail" class="text-info">Email:</label><br>
+                    <input type="text" [(ngModel)]="NewEmail" name="NewEmail" id="NewEmail" class="form-control">
+                    <span class="error">{{EmailError}}</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="NewPassword" class="text-info">Password:</label><br>
+                    <input type="password"  [(ngModel)]="NewPassword" name="NewPassword" id="NewPassword" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="NewPassword2" class="text-info">Confirm Password:</label><br>
+                    <input type="password"  [(ngModel)]="NewPassword2" name="NewPassword2" id="NewPassword2" class="form-control">
+                    <span class="error">{{PasswordError}}</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="NewRole" class="text-info">Assign a role: </label><br>
+                    <select  [(ngModel)]="NewRole" name="NewRole" id="NewRole" class="form-control">
+                        <option value="SA">Super Admin</option>
+                        <option value="GA">Group Admin</option>
+                        <option value="GS">Group Assistant</option>
+                        <option value="U">User</option>
+                    </select>
+                    <span class="error">{{RoleError}}</span>
+                </div>
+
+                <div class="form-group">
+                    <button (click)="newUser()" [(ngModel)]="error" class="btn btn-info btn-md">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <p *ngIf="role == 'GA' || 'SA'">Group Admin access</p>
     <p *ngIf="role == 'GS' || 'GA' || 'SA'">Group assiss access</p>
     {{role}}

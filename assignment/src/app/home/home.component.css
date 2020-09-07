@@ -1,0 +1,11 @@
+.error{
+    color: red;
+}
+
+#userForm{
+    padding: 20px;
+    background-color: lightgray;
+    border-radius: 10px;
+    width: 40%;
+    float: right;
+}
