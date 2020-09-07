@@ -16,3 +16,5 @@ require('./listen.js').listen(http);
 require('./sockets.js').connect(io);
 app.post('/api/auth', require('./postLogin'));
 app.post('/userCreate', require('./userCreate'));
+app.post('/findUsers', require('./findUsers'));
+app.post('/delUser', require('./delUser'));

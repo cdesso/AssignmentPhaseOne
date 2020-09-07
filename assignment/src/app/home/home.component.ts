@@ -29,6 +29,10 @@ export class HomeComponent implements OnInit {
   PasswordError = "";
   RoleError = "";
 
+  //Variables for user deletion
+  UsersArray=[];
+  UserDelete = ""
+
 
   constructor(private router: Router, private httpClient: HttpClient) { }
 
@@ -96,8 +100,31 @@ export class HomeComponent implements OnInit {
         this.PasswordError = "";
         this.RoleError = "";
         alert("User created");
+        this.findUsers();
       }
     });
   }
 
+  findUsers(){
+    this.httpClient.post(BACKEND_URL + '/findUsers', httpOptions).subscribe((data:any)=>{
+      if (this.UsersArray[0]){
+        this.UsersArray = []
+      } else {
+        for (let i = 0; i < data.length; i++){
+          if (data[i] == this.username){   continue;   }
+          this.UsersArray.push({"username": data[i], "id": i});
+        }
+      }
+      
+    })
+  }
+
+  delUser(id){
+    this.httpClient.post(BACKEND_URL + '/delUser', [id], httpOptions).subscribe((data:any)=>{
+      this.UsersArray = []
+      for (let i = 0; i < data.length; i++){
+        this.UsersArray.push({"username": data[i], "id": i});
+      }
+    })
+  }
 }
