@@ -18,3 +18,5 @@ app.post('/api/auth', require('./postLogin'));
 app.post('/userCreate', require('./userCreate'));
 app.post('/findUsers', require('./findUsers'));
 app.post('/delUser', require('./delUser'));
+app.post('/findGroups', require('./findGroups'));
+app.post('/findChannels', require('./findChannels'));

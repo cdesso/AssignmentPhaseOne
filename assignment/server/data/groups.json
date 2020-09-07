@@ -1,0 +1,16 @@
+[
+    {"groupName": "Group1", "channels": [
+        {"channelName": "General", "members": [
+            {"username": "cdesso"}, 
+            {"username": "axela"}
+        ]},
+        {"channelName": "Special", "members": [
+            {"username": "cdesso"}
+        ]}
+    ]}, 
+    {"groupName": "Group2", "channels": [
+        {"channelName": "General", "members": [
+            {"username": "cdesso"}
+        ]}
+    ]}
+]

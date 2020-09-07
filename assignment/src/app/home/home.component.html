@@ -4,19 +4,22 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   </head>
 <div class="container">
-    <div class="SA" *ngIf="role == 'SA'">
-        <div class="del">
-            <button (click)="findUsers()" class="btn btn-info btn-md">Delete Users</button>
-            <div class="userTable" *ngIf="UsersArray[0]">
-                <table>
-                    <tr *ngFor="let user of UsersArray">
-                        <td>{{user.username}}</td>
-                        <td><a (click)="delUser(user.id)" class="glyphicon glyphicon-trash"></a></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+    <h3 class="text-center text-info">My Groups</h3>
+    <div class="groups" *ngFor="let group of userGroups">
+        <button (click)="findChannels(username, group)" class="btn btn-info btn-md">{{group}}</button>
     </div>
+
+    <form id="joinChannel" class="form" method="post" *ngIf="userChannels[0]">
+        <div class="form-group">            
+            <label for="JoinChannel" class="text-info">Choose channel: </label><br>
+            <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control">
+                <option *ngFor="let channel of userChannels" value="{{channel}}">{{channel}}</option>
+            </select>
+        </div>  
+        <div class="form-group">
+            <button (click)="joinChannel()" class="btn btn-info btn-md">Join</button>
+        </div>
+    </form>
     <div class="GA" *ngIf="role == 'GA' || 'SA'">Group Admin access
         <div class="newUser">
             <form id="userForm" class="form" method="post">
@@ -59,6 +62,19 @@
                     <button (click)="newUser()" class="btn btn-info btn-md">Create</button>
                 </div>
             </form>
+            <div class="SA" *ngIf="role == 'SA'">
+                <div class="del">
+                    <button (click)="findUsers()" class="btn btn-info btn-md">Delete Users</button>
+                    <div class="userTable" *ngIf="UsersArray[0]">
+                        <table>
+                            <tr *ngFor="let user of UsersArray">
+                                <td>{{user.username}}</td>
+                                <td><a (click)="delUser(user.id)" class="glyphicon glyphicon-trash"></a></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <p *ngIf="role == 'GS' || 'GA' || 'SA'">Group assiss access</p>

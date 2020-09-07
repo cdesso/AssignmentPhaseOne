@@ -16,6 +16,9 @@ const BACKEND_URL = 'http://localhost:3000';
 export class HomeComponent implements OnInit {
   username = localStorage.getItem('username');
   role = localStorage.getItem('role');
+  userGroups = [];
+  userChannels = [];
+  JoinChannel = "";
 
   //Variables for user creation
   NewUsername = "";
@@ -40,6 +43,7 @@ export class HomeComponent implements OnInit {
     if (this.username == null){
       this.router.navigateByUrl('login');
     }
+    this.findGroups(this.username);
   }
 
   newUser(){
@@ -126,5 +130,21 @@ export class HomeComponent implements OnInit {
         this.UsersArray.push({"username": data[i], "id": i});
       }
     })
+  }
+
+  findGroups(username){
+    this.httpClient.post(BACKEND_URL + '/findGroups', [username], httpOptions).subscribe((data:any)=>{
+      this.userGroups = data
+    })
+  }
+
+  findChannels(username, group){
+    this.httpClient.post(BACKEND_URL + '/findChannels', [username, group], httpOptions).subscribe((data:any)=>{
+      this.userChannels = data;
+    })
+  }
+
+  joinChannel(){
+    alert("Joining " + this.JoinChannel);
   }
 }

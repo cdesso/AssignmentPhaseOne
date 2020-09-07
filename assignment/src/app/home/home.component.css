@@ -2,13 +2,17 @@
     color: red;
 }
 
-#userForm, .del{
+.newUser{
     padding: 20px;
     background-color: lightgray;
     border-radius: 10px;
     width: 40%;
-    float: right;
 }
 th, tr, td{
     padding:5px;
+}
+
+.groups{
+    display: inline;
+    margin: 10px;
 }
