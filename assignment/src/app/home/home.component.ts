@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
   userChannels = [];
   JoinChannel = "";
   activeGroup = "";
+  newGroupName = "";
 
   //Variables for user creation
   NewUsername = "";
@@ -45,10 +46,10 @@ export class HomeComponent implements OnInit {
     if (this.username == null){
       this.router.navigateByUrl('login');
     }
-    this.findGroups(this.username);
+    this.findGroups();
   }
 
-  newUser(){
+  addUser(){
     let newUser = {
       NewUsername: this.NewUsername,
       NewEmail: this.NewEmail,
@@ -56,7 +57,7 @@ export class HomeComponent implements OnInit {
       NewPassword2: this.NewPassword2,
       NewRole: this.NewRole
     };
-    this.httpClient.post(BACKEND_URL + '/userCreate', newUser, httpOptions).subscribe((data:any)=>{
+    this.httpClient.post(BACKEND_URL + '/addUser', newUser, httpOptions).subscribe((data:any)=>{
       if (data.error){
         if (data.error == 'uNameLength'){
           this.UserError = "Username must be at least 4 characters long";
@@ -134,15 +135,15 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  findGroups(username){
-    this.httpClient.post(BACKEND_URL + '/findGroups', [username], httpOptions).subscribe((data:any)=>{
+  findGroups(){
+    this.httpClient.post(BACKEND_URL + '/findGroups', [this.username, this.role], httpOptions).subscribe((data:any)=>{
       this.userGroups = data
     })
   }
 
-  findChannels(username, group){
+  findChannels(group){
     this.activeGroup = group;
-    this.httpClient.post(BACKEND_URL + '/findChannels', [username, group], httpOptions).subscribe((data:any)=>{
+    this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, group, this.role], httpOptions).subscribe((data:any)=>{
       this.userChannels = data;
     })
   }
@@ -155,7 +156,7 @@ export class HomeComponent implements OnInit {
     this.httpClient.post(BACKEND_URL + '/addGroup', [this.username], httpOptions).subscribe((data:any)=>{
       // this.userChannels = data;
       if (data){
-        this.findGroups(this.username);
+        this.findGroups();
       } else {
         alert("Error occured, group not added")
       }
@@ -163,7 +164,30 @@ export class HomeComponent implements OnInit {
   }
   addChannel(){
     this.httpClient.post(BACKEND_URL + '/addChannel', [this.activeGroup], httpOptions).subscribe((data:any)=>{
-      // this.userChannels = data;
+      if (data){
+        this.findChannels(this.activeGroup);
+      } else {
+        alert("Error occured, group not added")
+      }
     })
+  }
+
+  renameGroup() {
+    if (this.newGroupName == ""){
+      document.getElementById("renameBox").style.display = "block";
+    }
+    else {
+      document.getElementById("renameBox").style.display = "none";
+      alert("Changing name of " + this.activeGroup + " to " + this.newGroupName);
+
+      this.httpClient.post(BACKEND_URL + '/renameGroup', [this.activeGroup, this.newGroupName], httpOptions).subscribe((data:any)=>{
+        if (data){
+          this.findGroups()
+        } else {
+          alert("Error occured, invalid name")
+        }
+      })
+      this.newGroupName = ""
+    }
   }
 }

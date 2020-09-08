@@ -6,21 +6,28 @@
 <div class="container">
     <h3 class="text-center text-info">My Groups</h3>
     <div class="groups">
-        <button *ngFor="let group of userGroups" (click)="findChannels(username, group)" class="btn btn-info btn-md">{{group}}</button>
+        <button *ngFor="let group of userGroups" (click)="findChannels(group)" class="btn btn-info btn-md">{{group}}</button>
         <button *ngIf="role == 'GA' || role == 'SA'" (click)="addGroup()" class="btn btn-info btn-md">+</button>
     </div>
     
 
     <form id="joinChannel" class="form" method="post" *ngIf="userChannels[0]">
         <div class="form-group" id="channels">            
-            <label for="JoinChannel" class="text-info">Choose channel: </label><br>
-            <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control">
+            <label for="JoinChannel" class="text-info">Choose channel: </label>
+            <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control" style="width: 50%;">
                 <option *ngFor="let channel of userChannels" value="{{channel}}">{{channel}}</option>
             </select>
-        </div>  
-        <div class="form-group" id="channelButton">
-            <button (click)="joinChannel()" class="btn btn-info btn-md">Join</button>
-            <button *ngIf="role == 'GA' || role == 'SA'" (click)="addChannel()" class="btn btn-info btn-md">Create Channel</button>
+         
+            <span id="channelButton">
+                <button (click)="joinChannel()" class="btn btn-info btn-md">Join</button>
+                <button *ngIf="role == 'GA' || role == 'SA'" (click)="addChannel()" class="btn btn-info btn-md">Create Channel</button>
+            </span>
+        </div>
+        <div class="form-group renameForm">
+            <form id="joinChannel" class="form" method="post" *ngIf="role == 'GA' || role == 'SA'">
+                <input type="text" [(ngModel)]="newGroupName" placeholder="{{activeGroup}}" name="groupName" class="form-control" id="renameBox">
+                <button (click)="renameGroup()" class="btn btn-info btn-md">Rename Group</button>
+            </form>
         </div>
     </form>
     <div class="GroupAdmin" *ngIf="role == 'GA' || role == 'SA'">Group Admin access
@@ -62,7 +69,7 @@
                 </div>
 
                 <div class="form-group">
-                    <button (click)="newUser()" class="btn btn-info btn-md">Create</button>
+                    <button (click)="addUser()" class="btn btn-info btn-md">Create</button>
                 </div>
             </form>
             <div class="SA" *ngIf="role == 'SA'">

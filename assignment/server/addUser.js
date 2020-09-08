@@ -25,7 +25,7 @@ module.exports = function(req, res) {
         fs.readFile('./data/users.json', 'utf8', function(err, data){
             if (err) throw err;
             let users = JSON.parse(data);
-            let id = users.findIndex(user => (user.username == uName));
+            let id = users.findIndex(user => (user.username.toLowerCase() == uName.toLowerCase()));
             if (id == -1){
                 users.push({"username": uName, "password": pwd});
                 fs.writeFile('./data/users.json', JSON.stringify(users), 'utf8', function(err){
