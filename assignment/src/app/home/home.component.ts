@@ -130,7 +130,9 @@ export class HomeComponent implements OnInit {
     this.httpClient.post(BACKEND_URL + '/delUser', [id], httpOptions).subscribe((data:any)=>{
       this.UsersArray = []
       for (let i = 0; i < data.length; i++){
-        this.UsersArray.push({"username": data[i], "id": i});
+        if (data[i] != this.username){
+          this.UsersArray.push({"username": data[i], "id": i});
+        }
       }
     })
   }

@@ -35,30 +35,30 @@
             <form id="userForm" class="form" method="post">
                 <h3 class="text-center text-info">New user creation</h3>
                 <div class="form-group">
-                    <label for="NewUsername" class="text-info">Username:</label><br>
+                    <label for="NewUsername" class="text-info">Username:</label>
                     <input type="text" [(ngModel)]="NewUsername" name="NewUsername" id="NewUsername" class="form-control">
                     <span class="error">{{UserError}}</span>
                 </div>
                 
 
                 <div class="form-group">
-                    <label for="NewEmail" class="text-info">Email:</label><br>
+                    <label for="NewEmail" class="text-info">Email:</label>
                     <input type="text" [(ngModel)]="NewEmail" name="NewEmail" id="NewEmail" class="form-control">
                     <span class="error">{{EmailError}}</span>
                 </div>
 
                 <div class="form-group">
-                    <label for="NewPassword" class="text-info">Password:</label><br>
+                    <label for="NewPassword" class="text-info">Password:</label>
                     <input type="password"  [(ngModel)]="NewPassword" name="NewPassword" id="NewPassword" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="NewPassword2" class="text-info">Confirm Password:</label><br>
+                    <label for="NewPassword2" class="text-info">Confirm Password:</label>
                     <input type="password"  [(ngModel)]="NewPassword2" name="NewPassword2" id="NewPassword2" class="form-control">
                     <span class="error">{{PasswordError}}</span>
                 </div>
 
                 <div class="form-group">
-                    <label for="NewRole" class="text-info">Assign a role: </label><br>
+                    <label for="NewRole" class="text-info">Assign a role: </label>
                     <select  [(ngModel)]="NewRole" name="NewRole" id="NewRole" class="form-control">
                         <option value="SA">Super Admin</option>
                         <option value="GA">Group Admin</option>
