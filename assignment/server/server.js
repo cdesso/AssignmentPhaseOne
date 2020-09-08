@@ -20,3 +20,5 @@ app.post('/findUsers', require('./findUsers'));
 app.post('/delUser', require('./delUser'));
 app.post('/findGroups', require('./findGroups'));
 app.post('/findChannels', require('./findChannels'));
+app.post('/addGroup', require('./addGroup'));
+app.post('/addChannel', require('./addChannel'));

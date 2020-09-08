@@ -12,7 +12,11 @@ th, tr, td{
     padding:5px;
 }
 
-.groups{
+.groups > button{
     display: inline;
     margin: 10px;
+}
+#channelButton > button{
+    display: inline;
+    margin-left: 10px;
 }

@@ -5,22 +5,25 @@
   </head>
 <div class="container">
     <h3 class="text-center text-info">My Groups</h3>
-    <div class="groups" *ngFor="let group of userGroups">
-        <button (click)="findChannels(username, group)" class="btn btn-info btn-md">{{group}}</button>
+    <div class="groups">
+        <button *ngFor="let group of userGroups" (click)="findChannels(username, group)" class="btn btn-info btn-md">{{group}}</button>
+        <button *ngIf="role == 'GA' || role == 'SA'" (click)="addGroup()" class="btn btn-info btn-md">+</button>
     </div>
+    
 
     <form id="joinChannel" class="form" method="post" *ngIf="userChannels[0]">
-        <div class="form-group">            
+        <div class="form-group" id="channels">            
             <label for="JoinChannel" class="text-info">Choose channel: </label><br>
             <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control">
                 <option *ngFor="let channel of userChannels" value="{{channel}}">{{channel}}</option>
             </select>
         </div>  
-        <div class="form-group">
+        <div class="form-group" id="channelButton">
             <button (click)="joinChannel()" class="btn btn-info btn-md">Join</button>
+            <button *ngIf="role == 'GA' || role == 'SA'" (click)="addChannel()" class="btn btn-info btn-md">Create Channel</button>
         </div>
     </form>
-    <div class="GA" *ngIf="role == 'GA' || 'SA'">Group Admin access
+    <div class="GroupAdmin" *ngIf="role == 'GA' || role == 'SA'">Group Admin access
         <div class="newUser">
             <form id="userForm" class="form" method="post">
                 <h3 class="text-center text-info">New user creation</h3>
@@ -77,7 +80,7 @@
             </div>
         </div>
     </div>
-    <p *ngIf="role == 'GS' || 'GA' || 'SA'">Group assiss access</p>
+    <p *ngIf="role == 'GA' || role == 'SA' || role == 'GS'">Group assiss access</p>
     {{role}}
 </div>
 

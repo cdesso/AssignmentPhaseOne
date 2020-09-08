@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { VirtualTimeScheduler } from 'rxjs';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -19,6 +20,7 @@ export class HomeComponent implements OnInit {
   userGroups = [];
   userChannels = [];
   JoinChannel = "";
+  activeGroup = "";
 
   //Variables for user creation
   NewUsername = "";
@@ -139,6 +141,7 @@ export class HomeComponent implements OnInit {
   }
 
   findChannels(username, group){
+    this.activeGroup = group;
     this.httpClient.post(BACKEND_URL + '/findChannels', [username, group], httpOptions).subscribe((data:any)=>{
       this.userChannels = data;
     })
@@ -146,5 +149,21 @@ export class HomeComponent implements OnInit {
 
   joinChannel(){
     alert("Joining " + this.JoinChannel);
+  }
+
+  addGroup(){
+    this.httpClient.post(BACKEND_URL + '/addGroup', [this.username], httpOptions).subscribe((data:any)=>{
+      // this.userChannels = data;
+      if (data){
+        this.findGroups(this.username);
+      } else {
+        alert("Error occured, group not added")
+      }
+    })
+  }
+  addChannel(){
+    this.httpClient.post(BACKEND_URL + '/addChannel', [this.activeGroup], httpOptions).subscribe((data:any)=>{
+      // this.userChannels = data;
+    })
   }
 }
