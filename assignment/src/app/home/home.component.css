@@ -1,4 +1,4 @@
-.error{
+/* .error{
     color: red;
 }
 
@@ -8,14 +8,15 @@
     border-radius: 10px;
     width: 40%;
 }
+
+#JoinChannel{
+    margin-right: .5em;
+}
 th, tr, td{
     padding:5px;
 }
 
-.groups > button{
-    display: inline;
-    margin-right: 20px;
-}
+
 
 #channelButton > button{
     margin-right: 10px;
@@ -26,31 +27,51 @@ th, tr, td{
     margin-top: 5px;
 }
 
-#renameBox{
-    display: none;
-    margin-bottom: 3px;
-}
 
 #deleteUser{
     font-size: 1.5em;
 
 }    
+
+
+.newUserButton{
+    padding-bottom: 1em;
+}*/
+.groups, .container{
+    justify-content: center;
+}
 td{
-    padding-right: 1.5em;
+    padding: .5em;
+}
+.groups > button{
+    margin-right: 20px;
 }
 
-.form-check-label{
-    text-indent: 1.5em;
+#newInviteGroup, #newInviteGroup2, #deleteUserGroup, #deleteUserGroup2, #deleteUserChannel, #deleteUserChannel2{
+    display: none;
+} 
+#renameBox, #renameBox2{
+    display: none;
+    margin: 3px;
 }
 
 #userForm{
     display: none;
 }
 
-.newUserButton{
-    padding-bottom: 1em;
+.form-check-label{
+    text-indent: 1.5em;
+}
+.row{
+    padding-top: .5em;
+}
+.row > button{
+    margin-right: 5px;
 }
 
-#newInviteGroup, #deleteUserGroup{
-    display: none;
+.addChannel{
+    margin-left: 5px;
+}
+#deleteUserGroup, #newInviteGroup{
+    margin: .5em;
 }

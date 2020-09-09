@@ -30,3 +30,5 @@ app.post('/findInvite', require('./routes/findInvite'));
 app.post('/sendGroupInvite', require('./routes/sendGroupInvite'));
 app.post('/deleteFromGroup', require('./routes/deleteFromGroup'));
 app.post('/sendDeleteFromGroup', require('./routes/sendDeleteFromGroup'));
+app.post('/deleteFromChannel', require('./routes/deleteFromChannel'));
+app.post('/sendDeleteFromChannel', require('./routes/sendDeleteFromChannel'));

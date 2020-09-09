@@ -30,6 +30,10 @@ export class HomeComponent implements OnInit {
   deleteFromGroupForm = false;
   deleteUsersFromGroup = [];
 
+  newDeleteFromChannel = "";
+  deleteFromChannelForm = false;
+  deleteUsersFromChannel = [];
+
   renameGroupForm = false;
 
   //Variables for user creation
@@ -160,11 +164,13 @@ export class HomeComponent implements OnInit {
       this.inviteForm = false;
       this.newInviteGroup = "";
       document.getElementById("newInviteGroup").style.display = "none";
+      document.getElementById("newInviteGroup2").style.display = "none";
     }
     if (this.deleteFromGroupForm == true){
       this.deleteFromGroupForm = false;
       this.newDeleteFromGroup = "";
       document.getElementById("deleteUserGroup").style.display = "none";
+      document.getElementById("deleteUserGroup2").style.display = "none";
     }
   }
 
@@ -206,10 +212,24 @@ export class HomeComponent implements OnInit {
     if (!this.renameGroupForm){
       this.renameGroupForm = true;
       document.getElementById("renameBox").style.display = "block";
+      document.getElementById("renameBox2").style.display = "block";
+
+      if (this.deleteFromGroupForm == true){
+        this.deleteFromGroupForm = false;
+        this.newDeleteFromGroup = "";
+        document.getElementById("deleteUserGroup").style.display = "none";
+        document.getElementById("deleteUserGroup2").style.display = "none";
+      } else if (this.inviteForm == true){
+        this.inviteForm = false;
+        this.newInviteGroup = "";
+        document.getElementById("newInviteGroup").style.display = "none";
+        document.getElementById("newInviteGroup2").style.display = "none";
+      }
     }
     else {
       this.renameGroupForm = false;
       document.getElementById("renameBox").style.display = "none";
+      document.getElementById("renameBox2").style.display = "none";
       if (this.newGroupName != ""){
         alert("Changing name of " + this.activeGroup + " to " + this.newGroupName);
         this.httpClient.post(BACKEND_URL + '/renameGroup', [this.activeGroup, this.newGroupName], httpOptions).subscribe((data:any)=>{
@@ -254,16 +274,24 @@ export class HomeComponent implements OnInit {
       })
       this.inviteForm = true;
       document.getElementById("newInviteGroup").style.display = "block";
+      document.getElementById("newInviteGroup2").style.display = "block";
       if (this.deleteFromGroupForm == true){
         this.deleteFromGroupForm = false;
         this.newDeleteFromGroup = "";
         document.getElementById("deleteUserGroup").style.display = "none";
+        document.getElementById("deleteUserGroup2").style.display = "none";
+      } else if (this.renameGroupForm == true){
+        this.newGroupName = "";
+        this.renameGroupForm = false;
+        document.getElementById("renameBox").style.display = "none";
+        document.getElementById("renameBox2").style.display = "none";
       }
     }
     else {
       this.sendGroupInvite(this.newInviteGroup, this.activeGroup)
       this.inviteForm = false;
       document.getElementById("newInviteGroup").style.display = "none";
+      document.getElementById("newInviteGroup2").style.display = "none";
     }
   }
 
@@ -286,16 +314,25 @@ export class HomeComponent implements OnInit {
       })
       this.deleteFromGroupForm = true;
       document.getElementById("deleteUserGroup").style.display = "block";
+      document.getElementById("deleteUserGroup2").style.display = "block";
+
       if (this.inviteForm == true){
         this.inviteForm = false;
         this.newInviteGroup = "";
         document.getElementById("newInviteGroup").style.display = "none";
+        document.getElementById("newInviteGroup2").style.display = "none";
+      } else if (this.renameGroupForm == true){
+        this.newGroupName = "";
+        this.renameGroupForm = false;
+        document.getElementById("renameBox").style.display = "none";
+        document.getElementById("renameBox2").style.display = "none";
       }
     }
     else {
       this.sendDeleteFromGroup(this.newDeleteFromGroup, this.activeGroup)
       this.deleteFromGroupForm = false;
       document.getElementById("deleteUserGroup").style.display = "none";
+      document.getElementById("deleteUserGroup2").style.display = "none";
     }
   }
 
@@ -306,6 +343,35 @@ export class HomeComponent implements OnInit {
           this.deleteFromGroupForm = false;
           this.newDeleteFromGroup = "";
           alert(user + " removed from " + group)
+        }
+      })
+    }
+  }
+
+  deleteUserFromChannel(channel){
+    if (!this.deleteFromChannelForm){
+      this.httpClient.post(BACKEND_URL + '/deleteFromChannel', [channel, this.activeGroup, this.username], httpOptions).subscribe((data:any)=>{
+        this.deleteUsersFromChannel = data
+      })
+      this.deleteFromChannelForm = true;
+      document.getElementById("deleteUserChannel").style.display = "block";
+      document.getElementById("deleteUserChannel2").style.display = "block";
+    }
+    else {
+      this.deleteFromChannelForm = false;
+      document.getElementById("deleteUserChannel").style.display = "none";
+      document.getElementById("deleteUserChannel2").style.display = "none";
+
+    }
+  }
+
+  sendDeleteFromChannel(){
+    if (this.newDeleteFromChannel != ""){
+      this.httpClient.post(BACKEND_URL + '/sendDeleteFromChannel', [this.JoinChannel, this.activeGroup, this.newDeleteFromChannel], httpOptions).subscribe((data:any)=>{
+        if (data){
+          alert(this.newDeleteFromChannel + " removed from " + this.JoinChannel + " in " + this.activeGroup)
+          this.deleteFromChannelForm = false;
+          this.newDeleteFromChannel = "";
         }
       })
     }
