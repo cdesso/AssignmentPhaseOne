@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit {
   deleteFromGroupForm = false;
   deleteUsersFromGroup = [];
 
+  renameGroupForm = false;
+
   //Variables for user creation
   NewUsername = "";
   NewEmail = "";
@@ -201,22 +203,38 @@ export class HomeComponent implements OnInit {
   }
 
   renameGroup() {
-    if (this.newGroupName == ""){
+    if (!this.renameGroupForm){
+      this.renameGroupForm = true;
       document.getElementById("renameBox").style.display = "block";
     }
     else {
+      this.renameGroupForm = false;
       document.getElementById("renameBox").style.display = "none";
-      alert("Changing name of " + this.activeGroup + " to " + this.newGroupName);
-
-      this.httpClient.post(BACKEND_URL + '/renameGroup', [this.activeGroup, this.newGroupName], httpOptions).subscribe((data:any)=>{
-        if (data){
-          this.findGroups()
-        } else {
-          alert("Error occured, invalid name")
-        }
-      })
-      this.newGroupName = ""
+      if (this.newGroupName != ""){
+        alert("Changing name of " + this.activeGroup + " to " + this.newGroupName);
+        this.httpClient.post(BACKEND_URL + '/renameGroup', [this.activeGroup, this.newGroupName], httpOptions).subscribe((data:any)=>{
+          if (data[0]){
+            this.activeGroup = data[1];
+            this.findGroups();
+          } else {
+            alert("Error occured, invalid name")
+          }
+        })
+        this.newGroupName = ""
+      }
     }
+  }
+
+  deleteGroup(){
+    this.httpClient.post(BACKEND_URL + '/deleteGroup', [this.activeGroup], httpOptions).subscribe((data:any)=>{
+      if (data){
+        this.findGroups();
+        this.activeGroup = "";
+        this.userChannels = [];
+      } else {
+        alert("Error occured, group not deleted")
+      }
+    })
   }
 
   upgradeUser(id){

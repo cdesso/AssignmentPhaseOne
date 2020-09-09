@@ -9,6 +9,15 @@ module.exports = function(req, res) {
         let gID = groups.findIndex(group => (group.groupName == gName));
         let uID = groups[gID].members.findIndex(member => (member == uName));
         groups[gID].members.splice(uID, 1);
+
+        for (i in groups[gID].channels){
+            
+            for (j in groups[gID].channels[i].members){
+                if (groups[gID].channels[i].members[j].username == uName){
+                    groups[gID].channels[i].members.splice(j, 1);
+                }
+            }
+        }
         fs.writeFile('./data/groups.json', JSON.stringify(groups), 'utf8', function(err){
             if (err) throw err;
             res.send(true);

@@ -26,9 +26,6 @@ th, tr, td{
     margin-top: 5px;
 }
 
-.renameForm{
-    width: 50%;
-}
 #renameBox{
     display: none;
     margin-bottom: 3px;

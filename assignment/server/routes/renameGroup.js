@@ -21,7 +21,7 @@ module.exports = function(req, res) {
                     groups[i].groupName = newName;
                     fs.writeFile('./data/groups.json', JSON.stringify(groups), 'utf8', function(err){
                         if (err) throw err;
-                        res.send(true);
+                        res.send([true, newName]);
                     })
                 } else {
                     res.send(false);

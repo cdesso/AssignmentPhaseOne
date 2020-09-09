@@ -22,6 +22,7 @@ app.post('/findGroups', require('./routes/findGroups'));
 app.post('/findChannels', require('./routes/findChannels'));
 app.post('/addGroup', require('./routes/addGroup'));
 app.post('/addChannel', require('./routes/addChannel'));
+app.post('/deleteGroup', require('./routes/deleteGroup'));
 app.post('/deleteChannel', require('./routes/deleteChannel'));
 app.post('/renameGroup', require('./routes/renameGroup'));
 app.post('/upgradeUser', require('./routes/upgradeUser'));

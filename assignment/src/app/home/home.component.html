@@ -40,11 +40,14 @@
             </form>
         </div>
 
-        <div class="form-group renameForm">
-            <form class="form-group" method="post" *ngIf="role == 'GA' || role == 'SA'">
+        <div class="row form-group renameForm" *ngIf="(role == 'GA' || role == 'SA')" >
+            <form class="form-group col-md-3" method="post">
                 <input type="text" [(ngModel)]="newGroupName" placeholder="{{activeGroup}}" name="groupName" class="form-control" id="renameBox">
                 <button (click)="renameGroup()" class="btn btn-info btn-md">Rename Group</button>
             </form>
+            <div class="col-md-3">
+                <button (click)="deleteGroup()" class="btn btn-info btn-md">Delete {{activeGroup}}</button>
+            </div>
         </div>
     </form>
     <div class="GroupAdmin" *ngIf="role == 'GA' || role == 'SA'">Group Admin access
