@@ -26,6 +26,10 @@ export class HomeComponent implements OnInit {
   inviteForm = false;
   inviteUsers = [];
 
+  newDeleteFromGroup = "";
+  deleteFromGroupForm = false;
+  deleteUsersFromGroup = [];
+
   //Variables for user creation
   NewUsername = "";
   NewEmail = "";
@@ -152,7 +156,13 @@ export class HomeComponent implements OnInit {
     })
     if (this.inviteForm == true){
       this.inviteForm = false;
+      this.newInviteGroup = "";
       document.getElementById("newInviteGroup").style.display = "none";
+    }
+    if (this.deleteFromGroupForm == true){
+      this.deleteFromGroupForm = false;
+      this.newDeleteFromGroup = "";
+      document.getElementById("deleteUserGroup").style.display = "none";
     }
   }
 
@@ -226,6 +236,11 @@ export class HomeComponent implements OnInit {
       })
       this.inviteForm = true;
       document.getElementById("newInviteGroup").style.display = "block";
+      if (this.deleteFromGroupForm == true){
+        this.deleteFromGroupForm = false;
+        this.newDeleteFromGroup = "";
+        document.getElementById("deleteUserGroup").style.display = "none";
+      }
     }
     else {
       this.sendGroupInvite(this.newInviteGroup, this.activeGroup)
@@ -238,10 +253,43 @@ export class HomeComponent implements OnInit {
     if (user != ""){
       this.httpClient.post(BACKEND_URL + '/sendGroupInvite', [user, group], httpOptions).subscribe((data:any)=>{
         if (data){
+          this.inviteForm = false;
+          this.newInviteGroup = "";
           alert(user + " added to " + group)
         }
       })
     }
   }
 
+  deleteFromGroup(group){
+    if (!this.deleteFromGroupForm){
+      this.httpClient.post(BACKEND_URL + '/deleteFromGroup', [group, this.username], httpOptions).subscribe((data:any)=>{
+        this.deleteUsersFromGroup = data
+      })
+      this.deleteFromGroupForm = true;
+      document.getElementById("deleteUserGroup").style.display = "block";
+      if (this.inviteForm == true){
+        this.inviteForm = false;
+        this.newInviteGroup = "";
+        document.getElementById("newInviteGroup").style.display = "none";
+      }
+    }
+    else {
+      this.sendDeleteFromGroup(this.newDeleteFromGroup, this.activeGroup)
+      this.deleteFromGroupForm = false;
+      document.getElementById("deleteUserGroup").style.display = "none";
+    }
+  }
+
+  sendDeleteFromGroup(user, group){
+    if (user != ""){
+      this.httpClient.post(BACKEND_URL + '/sendDeleteFromGroup', [user, group], httpOptions).subscribe((data:any)=>{
+        if (data){
+          this.deleteFromGroupForm = false;
+          this.newDeleteFromGroup = "";
+          alert(user + " removed from " + group)
+        }
+      })
+    }
+  }
 }

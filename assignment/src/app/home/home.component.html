@@ -25,12 +25,18 @@
             </span>
         </div>
 
-        <div class="form-group">
-            <form class="form-group" method="post" *ngIf="role == 'GA' || role == 'SA'">
-                <select  [(ngModel)]="newInviteGroup" name="newInviteGroup" id="newInviteGroup" class="form-control" style="width: 50%;">
+        <div class="row form-group">
+            <form class="form-group col-md-3" method="post" *ngIf="role == 'GA' || role == 'SA'">
+                <select  [(ngModel)]="newInviteGroup" name="newInviteGroup" id="newInviteGroup" class="form-control">
                     <option *ngFor="let user of inviteUsers" value="{{user}}">{{user}}</option>
                 </select>
-                <button class="inviteGroup" (click)="inviteGroup(activeGroup)" class="btn btn-info btn-md">Invite to {{activeGroup}}</button>
+                <button class="inviteGroup" (click)="inviteGroup(activeGroup)" class="btn btn-info btn-md">Invite users to {{activeGroup}}</button>
+            </form> 
+            <form class="form-group col-md-3" method="post" *ngIf="role == 'GA' || role == 'SA'">
+                <select  [(ngModel)]="newDeleteFromGroup" name="newDeleteFromGroup" id="deleteUserGroup" class="form-control">
+                    <option *ngFor="let user of deleteUsersFromGroup" value="{{user}}">{{user}}</option>
+                </select>
+                <button class="deleteFromGroup" (click)="deleteFromGroup(activeGroup)" class="btn btn-info btn-md">Delete users from {{activeGroup}}</button>
             </form>
         </div>
 

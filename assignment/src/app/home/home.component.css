@@ -54,6 +54,6 @@ td{
     padding-bottom: 1em;
 }
 
-#newInviteGroup{
+#newInviteGroup, #deleteUserGroup{
     display: none;
 }

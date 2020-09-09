@@ -27,3 +27,5 @@ app.post('/renameGroup', require('./routes/renameGroup'));
 app.post('/upgradeUser', require('./routes/upgradeUser'));
 app.post('/findInvite', require('./routes/findInvite'));
 app.post('/sendGroupInvite', require('./routes/sendGroupInvite'));
+app.post('/deleteFromGroup', require('./routes/deleteFromGroup'));
+app.post('/sendDeleteFromGroup', require('./routes/sendDeleteFromGroup'));
