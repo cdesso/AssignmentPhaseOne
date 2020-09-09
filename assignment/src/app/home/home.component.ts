@@ -145,6 +145,7 @@ export class HomeComponent implements OnInit {
   }
 
   findChannels(group){
+    this.JoinChannel = '';
     this.activeGroup = group;
     this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, group, this.role], httpOptions).subscribe((data:any)=>{
       this.userChannels = data;
@@ -174,7 +175,17 @@ export class HomeComponent implements OnInit {
       if (data){
         this.findChannels(this.activeGroup);
       } else {
-        alert("Error occured, group not added")
+        alert("Error occured, channel not added")
+      }
+    })
+  }
+
+  deleteChannel(){
+    this.httpClient.post(BACKEND_URL + '/deleteChannel', [this.activeGroup, this.JoinChannel], httpOptions).subscribe((data:any)=>{
+      if (data){
+        this.findChannels(this.activeGroup);
+      } else {
+        alert("Error occured, channel not deleted")
       }
     })
   }

@@ -20,7 +20,8 @@
          
             <span id="channelButton">
                 <button (click)="joinChannel()" class="btn btn-info btn-md">Join</button>
-                <button *ngIf="role == 'GA' || role == 'SA'" (click)="addChannel()" class="btn btn-info btn-md">Create Channel</button>
+                <button *ngIf="(role == 'GA' || role == 'SA') && (JoinChannel != '')" (click)="deleteChannel()" class="btn btn-info btn-md">Delete Channel</button>
+                <button *ngIf="role == 'GA' || role == 'SA'" (click)="addChannel()" class="btn btn-info btn-md">Create New Channel</button>
             </span>
         </div>
 
