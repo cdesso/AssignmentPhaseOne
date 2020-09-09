@@ -22,18 +22,22 @@ export class HomeComponent implements OnInit {
   JoinChannel = "";
   activeGroup = "";
   newGroupName = "";
+  newInviteGroup = "";
+  inviteForm = false;
+  inviteUsers = [];
 
   //Variables for user creation
   NewUsername = "";
   NewEmail = "";
   NewPassword = "";
   NewPassword2 = "";
-  NewRole = "";
+  NewRole = "U";
 
   UserError = "";
   EmailError = "";
   PasswordError = "";
-  RoleError = "";
+
+  userForm = false;
 
   //Variables for user deletion
   UsersArray=[];
@@ -47,6 +51,16 @@ export class HomeComponent implements OnInit {
       this.router.navigateByUrl('login');
     }
     this.findGroups();
+  }
+
+  newUserForm(){
+    if (!this.userForm){
+      this.userForm = true;
+      document.getElementById("userForm").style.display = "block";
+    } else {
+      this.userForm = false;
+      document.getElementById("userForm").style.display = "none";
+    }
   }
 
   addUser(){
@@ -63,37 +77,26 @@ export class HomeComponent implements OnInit {
           this.UserError = "Username must be at least 4 characters long";
           this.EmailError = "";
           this.PasswordError = "";
-          this.RoleError = "";
         }
         if (data.error == 'username'){
           this.UserError = "Username already taken";
           this.EmailError = "";
           this.PasswordError = "";
-          this.RoleError = "";
         }
         if (data.error == 'emailLength'){
           this.UserError = "";
           this.EmailError = "Invalid email address length";
           this.PasswordError = "";
-          this.RoleError = "";
         }
         if (data.error == 'password'){
           this.UserError = "";
           this.EmailError = "";
           this.PasswordError = "Passwords do not match";
-          this.RoleError = "";
         }
         if (data.error == 'passwordLength'){
           this.UserError = "";
           this.EmailError = "";
           this.PasswordError = "Passwords must be longer than 5 characters";
-          this.RoleError = "";
-        }
-        if (data.error == 'role'){
-          this.UserError = "";
-          this.EmailError = "";
-          this.PasswordError = "";
-          this.RoleError = "Please enter a role";
         }
       }
       else {
@@ -101,13 +104,11 @@ export class HomeComponent implements OnInit {
         this.NewEmail = "";
         this.NewPassword = "";
         this.NewPassword2 = "";
-        this.NewRole = "";
+        this.NewRole = "U";
         this.UserError = "";
         this.EmailError = "";
         this.PasswordError = "";
-        this.RoleError = "";
         alert("User created");
-        this.findUsers();
       }
     });
   }
@@ -148,6 +149,10 @@ export class HomeComponent implements OnInit {
     this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, group, this.role], httpOptions).subscribe((data:any)=>{
       this.userChannels = data;
     })
+    if (this.inviteForm == true){
+      this.inviteForm = false;
+      document.getElementById("newInviteGroup").style.display = "none";
+    }
   }
 
   joinChannel(){
@@ -192,4 +197,40 @@ export class HomeComponent implements OnInit {
       this.newGroupName = ""
     }
   }
+
+  upgradeUser(id){
+    this.httpClient.post(BACKEND_URL + '/upgradeUser', [id], httpOptions).subscribe((data:any)=>{
+      if(!data){
+        alert("User is already a super admin");
+      } else {
+        alert("done");
+      }
+    })
+  }
+
+  inviteGroup(group){
+    if (!this.inviteForm){
+      this.httpClient.post(BACKEND_URL + '/findInvite', [group], httpOptions).subscribe((data:any)=>{
+        this.inviteUsers = data
+      })
+      this.inviteForm = true;
+      document.getElementById("newInviteGroup").style.display = "block";
+    }
+    else {
+      this.sendGroupInvite(this.newInviteGroup, this.activeGroup)
+      this.inviteForm = false;
+      document.getElementById("newInviteGroup").style.display = "none";
+    }
+  }
+
+  sendGroupInvite(user, group){
+    if (user != ""){
+      this.httpClient.post(BACKEND_URL + '/sendGroupInvite', [user, group], httpOptions).subscribe((data:any)=>{
+        if (data){
+          alert(user + " added to " + group)
+        }
+      })
+    }
+  }
+
 }

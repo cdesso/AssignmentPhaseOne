@@ -17,7 +17,7 @@ module.exports = function(req, res) {
                         }
                     } else {
                         for (u in groups[i].channels[j].members){
-                            if ((uName == groups[i].channels[j].members[u].username) || (!channels.includes(groups[i].channels[j].channelName))){
+                            if ((uName == groups[i].channels[j].members[u].username) && (!channels.includes(groups[i].channels[j].channelName))){
                                 channels.push(groups[i].channels[j].channelName)
                             }
                         }

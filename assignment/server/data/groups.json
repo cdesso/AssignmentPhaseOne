@@ -1,1 +1,22 @@
-[{"groupName":"Main","channels":[{"channelName":"General","members":[{"username":"cdesso"},{"username":"axela"}]},{"channelName":"Special","members":[{"username":"cdesso"}]}]},{"groupName":"Group2","channels":[{"channelName":"General","members":[{"username":"cdesso"},{"username":"axela"}]}]}]
+[
+    {"groupName": "Group1",
+    "members": ["cdesso", "axela", "bobby1"],
+    "channels": [
+        {"channelName": "General", "members": [
+            {"username": "cdesso"}, 
+            {"username": "axela"},
+            {"username": "bobby1"}
+        ]},
+        {"channelName": "Special", "members": [
+            {"username": "cdesso"}
+        ]}
+    ]}, 
+    {"groupName": "Group2", 
+    "members": ["cdesso", "axela"],
+    "channels": [
+        {"channelName": "General", "members": [
+            {"username": "cdesso"},
+            {"username": "axela"}
+        ]}
+    ]}
+]

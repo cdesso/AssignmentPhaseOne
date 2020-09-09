@@ -18,9 +18,6 @@ module.exports = function(req, res) {
     }
     else if (pwd.length <= 5){
         res.send({'error': 'passwordLength'})
-    }
-    else if (role == ""){
-        res.send({'error': 'role'})
     } else {
         fs.readFile('./data/users.json', 'utf8', function(err, data){
             if (err) throw err;

@@ -23,8 +23,18 @@
                 <button *ngIf="role == 'GA' || role == 'SA'" (click)="addChannel()" class="btn btn-info btn-md">Create Channel</button>
             </span>
         </div>
+
+        <div class="form-group">
+            <form class="form-group" method="post" *ngIf="role == 'GA' || role == 'SA'">
+                <select  [(ngModel)]="newInviteGroup" name="newInviteGroup" id="newInviteGroup" class="form-control" style="width: 50%;">
+                    <option *ngFor="let user of inviteUsers" value="{{user}}">{{user}}</option>
+                </select>
+                <button class="inviteGroup" (click)="inviteGroup(activeGroup)" class="btn btn-info btn-md">Invite to {{activeGroup}}</button>
+            </form>
+        </div>
+
         <div class="form-group renameForm">
-            <form id="joinChannel" class="form" method="post" *ngIf="role == 'GA' || role == 'SA'">
+            <form class="form-group" method="post" *ngIf="role == 'GA' || role == 'SA'">
                 <input type="text" [(ngModel)]="newGroupName" placeholder="{{activeGroup}}" name="groupName" class="form-control" id="renameBox">
                 <button (click)="renameGroup()" class="btn btn-info btn-md">Rename Group</button>
             </form>
@@ -32,8 +42,10 @@
     </form>
     <div class="GroupAdmin" *ngIf="role == 'GA' || role == 'SA'">Group Admin access
         <div class="newUser">
+            <div class="newUserButton">
+                <button (click)="newUserForm()" class="btn btn-info btn-md">New User</button>
+            </div>
             <form id="userForm" class="form" method="post">
-                <h3 class="text-center text-info">New user creation</h3>
                 <div class="form-group">
                     <label for="NewUsername" class="text-info">Username:</label>
                     <input type="text" [(ngModel)]="NewUsername" name="NewUsername" id="NewUsername" class="form-control">
@@ -57,15 +69,16 @@
                     <span class="error">{{PasswordError}}</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="NewRole" class="text-info">Assign a role: </label>
-                    <select  [(ngModel)]="NewRole" name="NewRole" id="NewRole" class="form-control">
-                        <option value="SA">Super Admin</option>
-                        <option value="GA">Group Admin</option>
-                        <option value="GS">Group Assistant</option>
-                        <option value="U">User</option>
-                    </select>
-                    <span class="error">{{RoleError}}</span>
+                <div class="form-group" *ngIf=" role == 'SA' ">
+                    <p class="text-info" style="font-weight: bold;">Make Group Admin?</p>
+                    <div class="form-check">
+                        <input class="form-check-input" [(ngModel)]="NewRole" type="radio" id="yes" name="newGA" value="GA">
+                        <label class="form-check-label" for="yes">Yes</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" [(ngModel)]="NewRole" type="radio" id="no" name="newGA" value="U" checked="checked">
+                        <label class="form-check-label" for="no">No</label>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -74,12 +87,13 @@
             </form>
             <div class="SA" *ngIf="role == 'SA'">
                 <div class="del">
-                    <button (click)="findUsers()" class="btn btn-info btn-md">Delete Users</button>
+                    <button (click)="findUsers()" class="btn btn-info btn-md">Admin</button>
                     <div class="userTable" *ngIf="UsersArray[0]">
                         <table>
                             <tr *ngFor="let user of UsersArray">
                                 <td>{{user.username}}</td>
-                                <td><a (click)="delUser(user.id)" class="glyphicon glyphicon-trash"></a></td>
+                                <td><a (click)="upgradeUser(user.id)" class="btn btn-info btn-sm">Make super admin</a></td>
+                                <td><a (click)="delUser(user.id)" class="glyphicon glyphicon-trash" id="deleteUser"></a></td>
                             </tr>
                         </table>
                     </div>
