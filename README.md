@@ -17,3 +17,9 @@
 3. run the server.js using 'node server.js' or 'npx nodemon server.js'
 
 ## Documentation not insert here due to time constraints (will be submitted learning@griffith and as a file in this repo.)
+
+
+##User Accounts
+Super Admin: super  abc123
+Group Admin: axela  abc123
+User: james2  abc123
