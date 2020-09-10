@@ -20,6 +20,6 @@
 
 
 ## User Accounts
-### Super Admin: super  abc123
+### Super Admin: super  admin
 ### Group Admin: axela  abc123
 ### User: james2  abc123
