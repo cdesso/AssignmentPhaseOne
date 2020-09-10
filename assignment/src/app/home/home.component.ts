@@ -176,6 +176,7 @@ export class HomeComponent implements OnInit {
 
   joinChannel(){
     alert("Joining " + this.JoinChannel);
+    alert("To be implemented");
   }
 
   addGroup(){

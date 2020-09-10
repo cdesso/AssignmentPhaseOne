@@ -4,7 +4,6 @@ module.exports = function(req, res) {
     var id = req.body[0];
     usersArray = []
 
-    console.log("tetet")
     fs.readFile('./data/users.json', 'utf8', function(err, data){
         if (err) throw err;
         let users = JSON.parse(data);

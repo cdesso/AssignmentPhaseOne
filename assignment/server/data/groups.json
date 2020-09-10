@@ -1,22 +1,22 @@
 [
     {"groupName": "Group1",
-    "members": ["cdesso", "axela", "bobby1"],
+    "members": ["super", "axela", "bobby1"],
     "channels": [
         {"channelName": "General", "members": [
-            {"username": "cdesso"}, 
+            {"username": "super"}, 
             {"username": "axela"},
             {"username": "bobby1"}
         ]},
         {"channelName": "Special", "members": [
-            {"username": "cdesso"},
+            {"username": "super"},
             {"username": "axela"}
         ]}
     ]}, 
     {"groupName": "Group2", 
-    "members": ["cdesso", "axela"],
+    "members": ["super", "axela"],
     "channels": [
         {"channelName": "General", "members": [
-            {"username": "cdesso"},
+            {"username": "super"},
             {"username": "axela"}
         ]}
     ]}

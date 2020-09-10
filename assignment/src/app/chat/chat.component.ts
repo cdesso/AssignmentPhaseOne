@@ -19,13 +19,15 @@ export class ChatComponent implements OnInit {
   constructor(private socketService:SocketService, private router: Router) { }
 
   ngOnInit(): void {
-    alert(localStorage.getItem('localStorage'));
-    if (localStorage.getItem('localStorage') != null){
-      this.initIoConnection();
-    }
-    else{
-      this.router.navigateByUrl('login');
-    }
+    alert('Not implemented fully, redirecting to home');
+    this.router.navigateByUrl('');
+    // alert(localStorage.getItem('localStorage'));
+    // if (localStorage.getItem('localStorage') != null){
+    //   this.initIoConnection();
+    // }
+    // else{
+    //   this.router.navigateByUrl('login');
+    // }
   }
 
   private initIoConnection(){
