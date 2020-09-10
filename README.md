@@ -19,7 +19,7 @@
 ## Documentation not insert here due to time constraints (will be submitted learning@griffith and as a file in this repo.)
 
 
-##User Accounts
-Super Admin: super  abc123
-Group Admin: axela  abc123
-User: james2  abc123
+## User Accounts
+### Super Admin: super  abc123
+### Group Admin: axela  abc123
+### User: james2  abc123
