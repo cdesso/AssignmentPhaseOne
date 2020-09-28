@@ -112,6 +112,9 @@ export class HomeComponent implements OnInit {
           this.EmailError = "";
           this.PasswordError = "Passwords must be longer than 5 characters";
         }
+        if (data.error == 'db'){
+          alert("Error inserting data, user not created.")
+        }
       }
       else {
         this.NewUsername = "";

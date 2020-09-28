@@ -25,7 +25,6 @@ module.exports = function(db, app) {
         userGroups = []
         var collection = db.collection('groups');
         collection.find({}).toArray((err, data)=>{
-            console.log(data)
             if (data.length == 0){
                 res.send()
             } else {

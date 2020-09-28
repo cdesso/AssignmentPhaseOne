@@ -17,11 +17,11 @@ var rooms = ['Group1-General'];
 require('./listen.js').listen(http);
 require('./sockets.js').connect(io, rooms);
 // app.post('/api/auth', require('./routes/postLogin'));
-app.post('/addUser', require('./routes/addUser'));
+// app.post('/addUser', require('./routes/addUser'));
 app.post('/findUsers', require('./routes/findUsers'));
 app.post('/delUser', require('./routes/delUser'));
 // app.post('/findGroups', require('./routes/findGroups'));
-app.post('/findChannels', require('./routes/findChannels'));
+// app.post('/findChannels', require('./routes/findChannels'));
 app.post('/addGroup', require('./routes/addGroup'));
 app.post('/addChannel', require('./routes/addChannel'));
 app.post('/deleteGroup', require('./routes/deleteGroup'));
@@ -44,6 +44,10 @@ MongoClient.connect(url, function(err, client) {
     const db = client.db(dbName);
     require('./routes/postLogin')(db, app);
     require('./routes/findGroups')(db, app);
+    require('./routes/findChannels')(db,app);
+    require('./routes/addUser')(db, app);
+
+
 
 
     
