@@ -14,8 +14,8 @@ export class AppComponent {
   logout(){
     // Log out function, check for login, if not exists, alert and do nothing, 
     // if exists, clear session storage, alert and logout
-    if (localStorage.getItem('username')){
-      localStorage.clear();
+    if (sessionStorage.getItem('username')){
+      sessionStorage.clear();
       alert('Successfully Logged out!');
       this.router.navigateByUrl('login');
     }

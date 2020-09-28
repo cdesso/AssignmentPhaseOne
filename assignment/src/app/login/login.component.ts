@@ -33,17 +33,12 @@ export class LoginComponent implements OnInit {
     // put data in session storage and route to account page.
     // else, prompt incorrect inputs and reset input fields.
     let user = {username: this.username, password: this.password};
+    
     this.httpClient.post(BACKEND_URL + '/api/auth', user, httpOptions).subscribe((data:any)=>{
       if (data){
         this.error = "";
         sessionStorage.setItem('username', data[0].username);
         sessionStorage.setItem('role', data[0].role);
-        sessionStorage.setItem('id', data[1].id);
-        // sessionStorage.setItem('username', data.username);
-        // sessionStorage.setItem('birthdate', data.birthdate);
-        // sessionStorage.setItem('age', data.age.toString());
-        // sessionStorage.setItem('userlogin', data.valid.toString());
-        // sessionStorage.setItem('email', data.email);
         this.router.navigateByUrl('');
       }
       else {
