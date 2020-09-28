@@ -30,6 +30,10 @@ export class HomeComponent implements OnInit {
   deleteFromGroupForm = false;
   deleteUsersFromGroup = [];
 
+  newInviteChannel = "";
+  inviteChannelForm = false;
+  inviteChannelUsers = [];
+
   newDeleteFromChannel = "";
   deleteFromChannelForm = false;
   deleteUsersFromChannel = [];
@@ -166,11 +170,17 @@ export class HomeComponent implements OnInit {
       document.getElementById("newInviteGroup").style.display = "none";
       document.getElementById("newInviteGroup2").style.display = "none";
     }
-    if (this.deleteFromGroupForm == true){
+    else if (this.deleteFromGroupForm == true){
       this.deleteFromGroupForm = false;
       this.newDeleteFromGroup = "";
       document.getElementById("deleteUserGroup").style.display = "none";
       document.getElementById("deleteUserGroup2").style.display = "none";
+    }
+    else if (this.renameGroupForm == true){
+      this.newGroupName = "";
+      this.renameGroupForm = false;
+      document.getElementById("renameBox").style.display = "none";
+      document.getElementById("renameBox2").style.display = "none";
     }
   }
 
@@ -349,6 +359,41 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  inviteChannel(group, channel){
+    if (!this.inviteChannelForm){
+      this.httpClient.post(BACKEND_URL + '/findChannelInvite', [group, channel], httpOptions).subscribe((data:any)=>{
+        this.inviteChannelUsers = data
+        console.log(data);
+      })
+      this.inviteChannelForm = true;
+      document.getElementById("newInviteChannel").style.display = "block";
+      document.getElementById("newInviteChannel2").style.display = "block";
+      if (this.deleteFromChannelForm == true){
+        this.deleteFromChannelForm = false;
+        this.newDeleteFromChannel = "";
+        document.getElementById("deleteUserChannel").style.display = "none";
+        document.getElementById("deleteUserChannel2").style.display = "none";
+      }
+    }
+    else{
+      this.inviteChannelForm = false;
+      this.newInviteChannel = "";
+      document.getElementById("newInviteChannel").style.display = "none";
+      document.getElementById("newInviteChannel2").style.display = "none";
+    }
+  }
+
+  sendChannelInvite(user, group, channel){
+    if (user != ""){
+      this.httpClient.post(BACKEND_URL + '/sendChannelInvite', [user, group, channel], httpOptions).subscribe((data:any)=>{
+        if (data){
+          this.inviteChannel(group, channel);
+          alert(user + " added to " + channel)
+        }
+      })
+    }
+  }
+
   deleteUserFromChannel(channel){
     if (!this.deleteFromChannelForm){
       this.httpClient.post(BACKEND_URL + '/deleteFromChannel', [channel, this.activeGroup, this.username], httpOptions).subscribe((data:any)=>{
@@ -360,9 +405,16 @@ export class HomeComponent implements OnInit {
     }
     else {
       this.deleteFromChannelForm = false;
+      this.newDeleteFromChannel = ""
       document.getElementById("deleteUserChannel").style.display = "none";
       document.getElementById("deleteUserChannel2").style.display = "none";
 
+    }
+    if (this.inviteChannelForm == true){
+      this.inviteChannelForm = false;
+      this.newInviteChannel = "";
+      document.getElementById("newInviteChannel").style.display = "none";
+      document.getElementById("newInviteChannel2").style.display = "none";
     }
   }
 
@@ -371,8 +423,7 @@ export class HomeComponent implements OnInit {
       this.httpClient.post(BACKEND_URL + '/sendDeleteFromChannel', [this.JoinChannel, this.activeGroup, this.newDeleteFromChannel], httpOptions).subscribe((data:any)=>{
         if (data){
           alert(this.newDeleteFromChannel + " removed from " + this.JoinChannel + " in " + this.activeGroup)
-          this.deleteFromChannelForm = false;
-          this.newDeleteFromChannel = "";
+          this.deleteUserFromChannel(this.JoinChannel);
         }
       })
     }

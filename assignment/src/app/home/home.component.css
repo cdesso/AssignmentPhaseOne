@@ -47,7 +47,7 @@ td{
     margin-right: 20px;
 }
 
-#newInviteGroup, #newInviteGroup2, #deleteUserGroup, #deleteUserGroup2, #deleteUserChannel, #deleteUserChannel2{
+#newInviteGroup, #newInviteGroup2, #deleteUserGroup, #deleteUserGroup2, #deleteUserChannel, #deleteUserChannel2, #newInviteChannel, #newInviteChannel2{
     display: none;
 } 
 #renameBox, #renameBox2{
@@ -65,7 +65,7 @@ td{
 .row{
     padding-top: .5em;
 }
-.row > button{
+.row > button, span > button{
     margin-right: 5px;
 }
 

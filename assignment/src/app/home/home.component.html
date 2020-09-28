@@ -17,15 +17,26 @@
             <label for="JoinChannel" class="text-info">Choose channel: </label>
         </div>
         <div class="row">
-            <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control col-sm-11">
+            <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control col-sm-9">
                 <option *ngFor="let channel of userChannels" value="{{channel}}">{{channel}}</option>
             </select>
-            <button *ngIf="role == 'GA' || role == 'SA'" (click)="addChannel()" class="col-sm-0.5 btn btn-info btn-md addChannel">+</button>
+            <span *ngIf="role == 'GA' || role == 'SA'">
+                <button  (click)="addChannel()" class="col-sm-0.5 btn btn-info btn-md addChannel">+</button>
+                <button *ngIf="JoinChannel != ''" (click)="deleteChannel()" class="btn btn-info btn-md" style="background-color: red; border-color: red;">Delete {{JoinChannel}}</button>
+            </span>
+        </div>
+        <div class="row" *ngIf="JoinChannel != ''">
+            <button (click)="joinChannel()" class="btn btn-info btn-md" style="background-color: green; border-color: green;">Join</button>
+            <span *ngIf="role == 'GA' || role == 'SA'">
+                <button (click)="inviteChannel(activeGroup, JoinChannel)" class="btn btn-info btn-md">Invite users to {{JoinChannel}}</button>
+                <button (click)="deleteUserFromChannel(JoinChannel)" class="btn btn-info btn-md">Remove users from {{JoinChannel}}</button>
+            </span>
         </div>
         <div class="row">
-            <button (click)="joinChannel()" class="btn btn-info btn-md" style="background-color: green; border-color: green;">Join</button>
-            <button *ngIf="(role == 'GA' || role == 'SA') && (JoinChannel != '')" (click)="deleteChannel()" class="btn btn-info btn-md" style="background-color: red; border-color: red;">Delete Channel</button>
-            <button *ngIf="(role == 'GA' || role == 'SA') && (JoinChannel != '')" (click)="deleteUserFromChannel(JoinChannel)" class="btn btn-info btn-md">Remove users from {{JoinChannel}}</button>
+            <select  [(ngModel)]="newInviteChannel" name="newInviteChannel" id="newInviteChannel" class="form-control col-sm-4" style="margin: 5px;">
+                <option *ngFor="let user of inviteChannelUsers" value="{{user}}">{{user}}</option>
+            </select>
+            <button (click)="sendChannelInvite(newInviteChannel, activeGroup, JoinChannel)" class="btn btn-info btn-md" id="newInviteChannel2" style="background-color: green; border-color: green;">Add</button>
         </div>
         <div class="row">
             <select  [(ngModel)]="newDeleteFromChannel" name="newDeleteFromChannel" id="deleteUserChannel" class="form-control col-sm-4" style="margin: 5px;">
@@ -36,7 +47,7 @@
     </div><br><br>
     <div class="row invDelGroup" *ngIf="(userChannels[0]) && (role == 'GA' || role == 'SA')">
         <button class="inviteGroup" (click)="inviteGroup(activeGroup)" class="btn btn-info btn-md">Invite users to {{activeGroup}}</button>
-        <button class="deleteFromGroup" (click)="deleteFromGroup(activeGroup)" class="btn btn-info btn-md">Delete users from {{activeGroup}}</button>
+        <button class="deleteFromGroup" (click)="deleteFromGroup(activeGroup)" class="btn btn-info btn-md">Remove users from {{activeGroup}}</button>
         <button (click)="renameGroup()" class="btn btn-info btn-md">Rename Group</button>
     </div>
     <div class="row" *ngIf="(userChannels[0]) && (role == 'GA' || role == 'SA')">
