@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // if the user is already logged in, alert and route to account page.
-    if (localStorage.getItem('username') != null){
+    if (sessionStorage.getItem('username') != null){
       alert('You are already logged in');
       this.router.navigateByUrl('');
     }
@@ -36,9 +36,9 @@ export class LoginComponent implements OnInit {
     this.httpClient.post(BACKEND_URL + '/api/auth', user, httpOptions).subscribe((data:any)=>{
       if (data){
         this.error = "";
-        localStorage.setItem('username', data[0].username);
-        localStorage.setItem('role', data[0].role);
-        localStorage.setItem('id', data[1].id);
+        sessionStorage.setItem('username', data[0].username);
+        sessionStorage.setItem('role', data[0].role);
+        sessionStorage.setItem('id', data[1].id);
         // sessionStorage.setItem('username', data.username);
         // sessionStorage.setItem('birthdate', data.birthdate);
         // sessionStorage.setItem('age', data.age.toString());

@@ -1,5 +1,7 @@
 <body>
     <div class="container">
+        <h4>Group: {{GroupChannel[0]}}</h4>
+        <h4>Channel: {{GroupChannel[1]}}</h4>
         <form>
             <div class="form-group">
                 <label for="messagecontent">New Message</label>
@@ -9,9 +11,12 @@
                 <button (click)="chat()" class="btn btn-primary">Chat</button>
             </div>
         </form>
+        <button (click)="leaveRoom()" class="btn btn-primary">Leave chat</button>
+
+        {{roomNotice}}
         <h3>Chat Messages</h3>
         <ul>
-            <li *ngFor="let message of messages">{{username}}: {{message}}</li>
+            <li *ngFor="let message of messages">{{message[0]}}: {{message[1]}}</li>
         </ul>
     </div>
 </body>

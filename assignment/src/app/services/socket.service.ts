@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = 'http://localhost:3000/chat';
 
 @Injectable({
   providedIn: 'root'
@@ -14,15 +14,31 @@ export class SocketService {
   public initSocket(): void {
     this.socket = io(SERVER_URL);
   }
-
-  public send(message: string): void {
-    this.socket.emit('message', message);
+ 
+  joinRoom(room):void{
+    this.socket.emit("joinRoom", room)
+  }
+  leaveRoom(room):void{
+    this.socket.emit("leaveRoom", room)
+  }
+  joined(next){
+    this.socket.on("joined", res=>next(res));
+  }
+  requserCount(room){
+    this.socket.emit('userCount', room);
+  }
+  getuserCount(next){
+    this.socket.on('userCount', res=>next(res));
+  }
+  notice(next){
+    this.socket.on('notice', res=>next(res));
   }
 
-  public onMessage(): Observable<any> {
-    let observable = new Observable(observer=>{
-      this.socket.on('message', (data:string) => observer.next(data));
-    });
-    return observable;
+  send(user, message): void {
+    this.socket.emit('message', [user, message]);
+  }
+
+  getMessage(next){
+    this.socket.on('message', (message)=>next(message));
   }
 }

@@ -26,7 +26,7 @@
             </span>
         </div>
         <div class="row" *ngIf="JoinChannel != ''">
-            <button (click)="joinChannel()" class="btn btn-info btn-md" style="background-color: green; border-color: green;">Join</button>
+            <button (click)="joinChannel(activeGroup, JoinChannel)" class="btn btn-info btn-md" style="background-color: green; border-color: green;">Join</button>
             <span *ngIf="role == 'GA' || role == 'SA'">
                 <button (click)="inviteChannel(activeGroup, JoinChannel)" class="btn btn-info btn-md">Invite users to {{JoinChannel}}</button>
                 <button (click)="deleteUserFromChannel(JoinChannel)" class="btn btn-info btn-md">Remove users from {{JoinChannel}}</button>

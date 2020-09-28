@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { VirtualTimeScheduler } from 'rxjs';
+import { SharedDataService } from '../services/shared-data.service'
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -15,8 +15,8 @@ const BACKEND_URL = 'http://localhost:3000';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  username = localStorage.getItem('username');
-  role = localStorage.getItem('role');
+  username = sessionStorage.getItem('username');
+  role = sessionStorage.getItem('role');
   userGroups = [];
   userChannels = [];
   JoinChannel = "";
@@ -58,7 +58,7 @@ export class HomeComponent implements OnInit {
   UserDelete = ""
 
 
-  constructor(private router: Router, private httpClient: HttpClient) { }
+  constructor(private router: Router, private httpClient: HttpClient, private shared: SharedDataService) { }
 
   ngOnInit(): void {
     if (this.username == null){
@@ -184,9 +184,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  joinChannel(){
-    alert("Joining " + this.JoinChannel);
-    alert("To be implemented");
+  joinChannel(group, channel){
+    let room = group + "-" + channel;
+    this.shared.changeMessage([group, channel]);
+    this.router.navigate(['/chat']);
   }
 
   addGroup(){
@@ -363,7 +364,6 @@ export class HomeComponent implements OnInit {
     if (!this.inviteChannelForm){
       this.httpClient.post(BACKEND_URL + '/findChannelInvite', [group, channel], httpOptions).subscribe((data:any)=>{
         this.inviteChannelUsers = data
-        console.log(data);
       })
       this.inviteChannelForm = true;
       document.getElementById("newInviteChannel").style.display = "block";

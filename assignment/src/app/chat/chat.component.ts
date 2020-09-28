@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SocketService } from '../services/socket.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SharedDataService } from '../services/shared-data.service';
 
 @Component({
   selector: 'app-chat',
@@ -9,38 +10,56 @@ import { Router } from '@angular/router';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-
+  GroupChannel: any = []
+  room:string = ""
   messagecontent:string="";
   messages:string[] = [];
-  ioConnection:any;
-  // id = sessionStorage.getItem('id');
-  username = localStorage.getItem('localStorage');
+  roomNotice:string  = ""
+  userCount:number = 0
+  isInRoom = false;
+  user = sessionStorage.getItem('username');
 
-  constructor(private socketService:SocketService, private router: Router) { }
+  constructor(private socketService:SocketService, private router: Router, private route: ActivatedRoute, private shared: SharedDataService) { }
 
   ngOnInit(): void {
-    alert('Not implemented fully, redirecting to home');
-    this.router.navigateByUrl('');
-    // alert(localStorage.getItem('localStorage'));
-    // if (localStorage.getItem('localStorage') != null){
-    //   this.initIoConnection();
-    // }
-    // else{
-    //   this.router.navigateByUrl('login');
-    // }
+    this.shared.currentMessage.subscribe(data => (this.GroupChannel = data));
+    if (this.GroupChannel[0] == undefined){
+      this.router.navigateByUrl('');
+    } else {
+      this.room = this.GroupChannel[0] + "-" + this.GroupChannel[1];
+      this.socketService.initSocket();
+      this.socketService.getMessage((m)=>{this.messages.push(m)});
+      this.socketService.notice((msg)=>{ this.roomNotice = msg}); 
+      this.socketService.joined((msg)=>{ this.room = msg });
+      this.joinRoom();
+    }
   }
 
-  private initIoConnection(){
-    this.socketService.initSocket();
-    this.ioConnection = this.socketService.onMessage()
-    .subscribe((message:string) => {
-      this.messages.push(message);
-    });
+  joinRoom(){
+    this.socketService.joinRoom(this.room);
+    this.socketService.requserCount(this.room);
+    this.socketService.getuserCount((res)=>{this.userCount = res});
   }
 
-  public chat(){
+  // clearNotice(){
+  //   this.roomNotice = "";
+  // }
+
+  leaveRoom(){
+    this.socketService.leaveRoom(this.room)
+    this.socketService.requserCount(this.room);
+    this.socketService.getuserCount((res)=>{this.userCount = res});
+    this.room = "";
+    this.messages = [];
+    this.userCount = 0;
+    this.roomNotice = "";
+    this.isInRoom = false;
+    this.router.navigateByUrl('/');
+  }
+
+  chat(){
     if (this.messagecontent){
-      this.socketService.send(this.messagecontent);
+      this.socketService.send(this.user, this.messagecontent);
       this.messagecontent=null;
     }
     else {
