@@ -18,21 +18,21 @@ require('./listen.js').listen(http);
 require('./sockets.js').connect(io, rooms);
 // app.post('/api/auth', require('./routes/postLogin'));
 // app.post('/addUser', require('./routes/addUser'));
-app.post('/findUsers', require('./routes/findUsers'));
-app.post('/delUser', require('./routes/delUser'));
+// app.post('/findUsers', require('./routes/findUsers'));
+// app.post('/delUser', require('./routes/delUser'));
 // app.post('/findGroups', require('./routes/findGroups'));
 // app.post('/findChannels', require('./routes/findChannels'));
-app.post('/addGroup', require('./routes/addGroup'));
-app.post('/addChannel', require('./routes/addChannel'));
-app.post('/deleteGroup', require('./routes/deleteGroup'));
-app.post('/deleteChannel', require('./routes/deleteChannel'));
-app.post('/renameGroup', require('./routes/renameGroup'));
-app.post('/upgradeUser', require('./routes/upgradeUser'));
-app.post('/findInvite', require('./routes/findInvite'));
-app.post('/sendGroupInvite', require('./routes/sendGroupInvite'));
-app.post('/findChannelInvite', require('./routes/findChannelInvite'));
-app.post('/sendChannelInvite', require('./routes/sendChannelInvite'));
-app.post('/deleteFromGroup', require('./routes/deleteFromGroup'));
+// app.post('/addGroup', require('./routes/addGroup'));
+// app.post('/addChannel', require('./routes/addChannel'));
+// app.post('/deleteGroup', require('./routes/deleteGroup'));
+// app.post('/deleteChannel', require('./routes/deleteChannel'));
+// app.post('/renameGroup', require('./routes/renameGroup'));
+// app.post('/upgradeUser', require('./routes/upgradeUser'));
+// app.post('/findInvite', require('./routes/findInvite'));
+// app.post('/sendGroupInvite', require('./routes/sendGroupInvite'));
+// app.post('/findChannelInvite', require('./routes/findChannelInvite'));
+// app.post('/sendChannelInvite', require('./routes/sendChannelInvite'));
+// app.post('/deleteFromGroup', require('./routes/deleteFromGroup'));
 app.post('/sendDeleteFromGroup', require('./routes/sendDeleteFromGroup'));
 app.post('/deleteFromChannel', require('./routes/deleteFromChannel'));
 app.post('/sendDeleteFromChannel', require('./routes/sendDeleteFromChannel'));
@@ -46,9 +46,20 @@ MongoClient.connect(url, function(err, client) {
     require('./routes/findGroups')(db, app);
     require('./routes/findChannels')(db,app);
     require('./routes/addUser')(db, app);
+    require('./routes/findInvite')(db, app);
+    require('./routes/findChannelInvite')(db, app);
+    require('./routes/deleteGroup')(db, app);
+    require('./routes/deleteFromGroup')(db, app);
+    require('./routes/findUsers')(db, app);
+    require('./routes/delUser')(db, app);
+    require('./routes/upgradeUser')(db, app);
+    require('./routes/addGroup')(db, app);
+    require('./routes/addChannel')(db, app);
+    require('./routes/deleteChannel')(db, app);
+    require('./routes/renameGroup')(db, app);
+    require('./routes/sendGroupInvite')(db, app);
+    require('./routes/sendChannelInvite')(db, app);
 
 
 
-
-    
 })
