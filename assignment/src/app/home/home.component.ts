@@ -137,7 +137,7 @@ export class HomeComponent implements OnInit {
       } else {
         for (let i = 0; i < data.length; i++){
           if (data[i] == this.username){   continue;   }
-          this.UsersArray.push({"username": data[i]});
+          this.UsersArray.push({"username": data[i], "id": i});
         }
       }
       
@@ -146,8 +146,11 @@ export class HomeComponent implements OnInit {
 
   delUser(id){
     this.httpClient.post(BACKEND_URL + '/delUser', [id], httpOptions).subscribe((data:any)=>{
-      if (data){
-        this.findUsers();
+      this.UsersArray = []
+      for (let i = 0; i < data.length; i++){
+        if (data[i] != this.username){
+          this.UsersArray.push({"username": data[i], "id": i});
+        }
       }
     })
   }
