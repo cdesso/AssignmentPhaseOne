@@ -42,24 +42,26 @@ MongoClient.connect(url, function(err, client) {
     if (err) {return console.log(err)}
     const dbName = 'assignment';
     const db = client.db(dbName);
-    require('./routes/postLogin')(db, app);
+    require('./routes/postLogin')(db, app); //done
     require('./routes/findGroups')(db, app);
-    require('./routes/findChannels')(db,app);
-    require('./routes/addUser')(db, app);
-    require('./routes/findInvite')(db, app);
-    require('./routes/findChannelInvite')(db, app);
-    require('./routes/deleteGroup')(db, app);
-    require('./routes/deleteFromGroup')(db, app);
-    require('./routes/findUsers')(db, app);
-    require('./routes/delUser')(db, app);
-    require('./routes/upgradeUser')(db, app);
-    require('./routes/addGroup')(db, app);
-    require('./routes/addChannel')(db, app);
-    require('./routes/deleteChannel')(db, app);
-    require('./routes/renameGroup')(db, app);
-    require('./routes/sendGroupInvite')(db, app);
-    require('./routes/sendChannelInvite')(db, app);
+    require('./routes/findChannels')(db,app, ObjectID);
+    // require('./routes/addUser')(db, app);
+    // require('./routes/findInvite')(db, app);
+    // require('./routes/findChannelInvite')(db, app);
+    // require('./routes/deleteGroup')(db, app);
+    // require('./routes/deleteFromGroup')(db, app);
+    // require('./routes/findUsers')(db, app);
+    // require('./routes/delUser')(db, app);
+    // require('./routes/upgradeUser')(db, app);
+    // require('./routes/addGroup')(db, app);
+    // require('./routes/addChannel')(db, app);
+    // require('./routes/deleteChannel')(db, app);
+    // require('./routes/renameGroup')(db, app);
+    // require('./routes/sendGroupInvite')(db, app);
+    // require('./routes/sendChannelInvite')(db, app);
 
 
 
 })
+
+// db.groups.insertOne({"groupName":"Group2", "members":[ObjectId("5f71dcf94f9ab96874e19789"), ObjectId("5f71dd354f9ab96874e1978a")], "channels":[{"channelName":"General","members":[ObjectId("5f71dcf94f9ab96874e19789"), ObjectId("5f71dd354f9ab96874e1978a")]},{"channelName":"Channel2","members":[]}]})
