@@ -38,28 +38,5 @@ module.exports = function(db, app) {
                 res.send(true);
             })
         })
-        
-        
-        
-        // collection.find({}).toArray((err, group)=>{
-        //     if (err) throw err;
-        //     let uID = group[0].members.findIndex(member => (member == uName));
-        //     collection.updateOne({'groupName': gName}, {'$pull': {'members': group[0].members[uID]}}, (err, docs)=>{
-        //         if (err) throw err;
-        //             for (i in group[0].channels){
-        //                 let id = group[0].channels[i].members.findIndex(member => (member.username == uName));
-        //                 if (id >= 0){
-        //                     // console.log(group[0].channels);
-        //                     group[0].channels[i].members.splice(id, 1);
-        //                 }
-        //                 channel = 'channels.'+i+'.members';
-        //                 console.log(channel)
-        //                 collection.updateOne({'groupName': gName}, {'$pull':{'channels': {'members': {'username': uName}}}}, {'multi': true}, (err, docs)=>{
-        //                     if (err) throw err;
-        //                     res.send(true);
-        //                 })
-        //             }
-        //     });
-        // });
     });
 }    

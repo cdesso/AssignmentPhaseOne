@@ -35,7 +35,6 @@ module.exports = function(db, app, ObjectID) {
         group = req.body[1]
         role = req.body[2]
         channels = []
-
         var collection = db.collection('groups');
         if (role == "SA" || role == "GA"){
             collection.find({'groupName': group}).toArray((err, data)=>{
