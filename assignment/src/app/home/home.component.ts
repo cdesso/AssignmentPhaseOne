@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedDataService } from '../services/shared-data.service'
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -65,6 +66,36 @@ export class HomeComponent implements OnInit {
       this.router.navigateByUrl('login');
     }
     this.findGroups();
+  }
+
+  resetForms(){
+    
+      this.inviteForm = false;
+      this.newInviteGroup = "";
+      document.getElementById("newInviteGroup").style.display = "none";
+      document.getElementById("newInviteGroup2").style.display = "none";
+    
+    
+      this.deleteFromGroupForm = false;
+      this.newDeleteFromGroup = "";
+      document.getElementById("deleteUserGroup").style.display = "none";
+      document.getElementById("deleteUserGroup2").style.display = "none";
+    
+      this.newGroupName = "";
+      this.renameGroupForm = false;
+      document.getElementById("renameBox").style.display = "none";
+      document.getElementById("renameBox2").style.display = "none";
+
+      this.deleteFromChannelForm = false;
+      this.newDeleteFromChannel = ""
+      document.getElementById("deleteUserChannel").style.display = "none";
+      document.getElementById("deleteUserChannel2").style.display = "none";
+
+      this.inviteChannelForm = false;
+      this.newInviteChannel = "";
+      document.getElementById("newInviteChannel").style.display = "none";
+      document.getElementById("newInviteChannel2").style.display = "none";
+    
   }
 
   newUserForm(){
@@ -164,32 +195,15 @@ export class HomeComponent implements OnInit {
   findChannels(group){
     this.JoinChannel = '';
     this.activeGroup = group;
-    this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, group, this.role], httpOptions).subscribe((data:any)=>{
+    this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, this.activeGroup, this.role], httpOptions).subscribe((data:any)=>{
       this.userChannels = data;
     })
-    if (this.inviteForm == true){
-      this.inviteForm = false;
-      this.newInviteGroup = "";
-      document.getElementById("newInviteGroup").style.display = "none";
-      document.getElementById("newInviteGroup2").style.display = "none";
-    }
-    else if (this.deleteFromGroupForm == true){
-      this.deleteFromGroupForm = false;
-      this.newDeleteFromGroup = "";
-      document.getElementById("deleteUserGroup").style.display = "none";
-      document.getElementById("deleteUserGroup2").style.display = "none";
-    }
-    else if (this.renameGroupForm == true){
-      this.newGroupName = "";
-      this.renameGroupForm = false;
-      document.getElementById("renameBox").style.display = "none";
-      document.getElementById("renameBox2").style.display = "none";
-    }
+    this.resetForms()
   }
 
-  joinChannel(group, channel){
-    let room = group + "-" + channel;
-    this.shared.changeMessage([group, channel]);
+  joinChannel(){
+    let room = this.activeGroup + "-" + this.JoinChannel;
+    this.shared.changeMessage([this.activeGroup, this.JoinChannel]);
     this.router.navigate(['/chat']);
   }
 
@@ -344,20 +358,20 @@ export class HomeComponent implements OnInit {
       }
     }
     else {
-      this.sendDeleteFromGroup(this.newDeleteFromGroup, this.activeGroup)
+      this.sendDeleteFromGroup(this.newDeleteFromGroup)
       this.deleteFromGroupForm = false;
       document.getElementById("deleteUserGroup").style.display = "none";
       document.getElementById("deleteUserGroup2").style.display = "none";
     }
   }
 
-  sendDeleteFromGroup(user, group){
+  sendDeleteFromGroup(user){
     if (user != ""){
-      this.httpClient.post(BACKEND_URL + '/sendDeleteFromGroup', [user, group], httpOptions).subscribe((data:any)=>{
+      this.httpClient.post(BACKEND_URL + '/sendDeleteFromGroup', [user, this.activeGroup], httpOptions).subscribe((data:any)=>{
         if (data){
           this.deleteFromGroupForm = false;
           this.newDeleteFromGroup = "";
-          alert(user + " removed from " + group)
+          alert(user + " removed from " + this.activeGroup);
         }
       })
     }

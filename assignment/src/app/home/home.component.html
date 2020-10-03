@@ -58,7 +58,7 @@
         <select  [(ngModel)]="newDeleteFromGroup" name="newDeleteFromGroup" id="deleteUserGroup" class="form-control col-sm-6">
             <option *ngFor="let user of deleteUsersFromGroup" value="{{user}}">{{user}}</option>
         </select>
-        <button (click)="deleteGroup()" class="btn btn-info btn-md" id="deleteUserGroup2" style="background-color: red; border-color: red;">Delete</button>
+        <button (click)="sendDeleteFromGroup()" class="btn btn-info btn-md" id="deleteUserGroup2" style="background-color: red; border-color: red;">Delete</button>
         <select  [(ngModel)]="newInviteGroup" name="newInviteGroup" id="newInviteGroup" class="form-control col-sm-6">
             <option *ngFor="let user of inviteUsers" value="{{user}}">{{user}}</option>
         </select>

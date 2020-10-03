@@ -37,25 +37,24 @@ module.exports = function(db, app, ObjectID) {
         channels = []
 
         var collection = db.collection('groups');
-        collection.find({}).toArray((err, data)=>{
-            for (i in data){
-                if (data[i].groupName == group){
-                    for (j in data[i].channels){
-                        if ((role == "SA" || role == "GA") && (!channels.includes(data[i].channels[j].channelName))){
-                            if (!channels.includes(data[i].channels[j].channelName)){
-                                channels.push(data[i].channels[j].channelName)
-                            }
-                        } else {
-                            for (u in data[i].channels[j].members){
-                                if ((uName == data[i].channels[j].members[u].username) && (!channels.includes(data[i].channels[j].channelName))){
-                                    channels.push(data[i].channels[j].channelName)
-                                }
-                            }
-                        }
-                    }
+        if (role == "SA" || role == "GA"){
+            collection.find({'groupName': group}).toArray((err, data)=>{
+                for (i in data[0].channels){
+                    channels.push(data[0].channels[i].channelName)
                 }
-            }
-            res.send(channels);
-        })
+                res.send(channels)
+            })
+        } else {
+            collection.aggregate(
+                {'$unwind': '$channels'},
+                {'$match' : {'$and': [{'channels.members.username': uName}, {'groupName': group}]}},
+                {'$group' : '$channels.channelName'}
+            ).toArray((err, data)=>{
+                for (i in data){
+                    channels.push(data[i].channels.channelName)
+                }
+                res.send(channels)
+            })
+        }
     })   
 }

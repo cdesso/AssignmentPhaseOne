@@ -23,25 +23,27 @@
 // }
 
 
-// module.exports = function(db, app) {
-//     app.post('/sendChannelInvite', function(req, res){
-//         user = req.body[0];
-//         inviteGroup = req.body[1];
-//         inviteChannel = req.body[2];
-//         var collection = db.collection('groups');
-//         collection.find({'groupName': inviteGroup}).toArray((err, group)=>{
-//             if (!group[0].members.includes(user)){
-//                 collection.updateOne({'groupName': inviteGroup}, {$push: {'members': user}}, (err, docs)=>{
-//                     if (err) throw err;
-//                 });
-//             }
-//             cID = group[0].channels.findIndex(channel => (channel.channelName == inviteChannel))
-//             channel = group[0].channels[cID];
-//             channel.members.push({'username': user});
-//             collection.updateOne({'groupName': inviteGroup}, {$push: {'channels': channel}}, (err, docs)=>{
-//                 if (err) throw err;
-//             });
-//         });
-//     });
-// }
+module.exports = function(db, app) {
+    app.post('/sendChannelInvite', function(req, res){
+        uName = req.body[0];
+        inviteGroup = req.body[1];
+        inviteChannel = req.body[2];
+        
+        var collection = db.collection('groups');
+        collection.updateOne({'groupName': inviteGroup}, {'$addToSet': {'members': uName}}, (err, docs)=>{
+            if (err) throw err;
+            collection.updateOne(
+                {'$and': [
+                    {'groupName': inviteGroup}, 
+                    {'channels.channelName': inviteChannel}
+                ]}, 
+                {'$push':{
+                    'channels.$.members': {'username': uName}
+                }}, (err, docs)=>{
+                if (err) throw err;
+                res.send(true);
+            });
+        });
+    });
+}
     

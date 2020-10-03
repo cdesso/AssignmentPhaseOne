@@ -25,17 +25,21 @@ module.exports = function(db, app) {
         userGroups = [];
 
         var collection = db.collection('groups');
-        collection.find({}).toArray((err, groups)=>{
-            if (groups.length == 0){
-                res.send()
-            } else {
+        if (role == "SA" || role == "GA"){
+            collection.find({}).toArray((err, groups)=>{
                 for (i in groups){
-                    if ( (groups[i].members.includes(uName)) || (role == "SA" || role == "GA") ){
-                        userGroups.push(groups[i].groupName);
-                    }
+                    userGroups.push(groups[i].groupName);
                 }
                 res.send(userGroups)
-            }
-        });
+            })
+        } else {
+            collection.find({'members': uName}).toArray((err, groups)=>{
+                console.log(groups)
+                for (i in groups){
+                    userGroups.push(groups[i].groupName);
+                }
+                res.send(userGroups)
+            })
+        }
     });
 }

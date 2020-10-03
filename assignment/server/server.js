@@ -6,7 +6,6 @@ const cors = require('cors');
 const io = require('socket.io')(http);
 const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
-var ObjectID = require('mongodb').ObjectID;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -33,8 +32,8 @@ require('./sockets.js').connect(io, rooms);
 // app.post('/findChannelInvite', require('./routes/findChannelInvite'));
 // app.post('/sendChannelInvite', require('./routes/sendChannelInvite'));
 // app.post('/deleteFromGroup', require('./routes/deleteFromGroup'));
-app.post('/sendDeleteFromGroup', require('./routes/sendDeleteFromGroup'));
-app.post('/deleteFromChannel', require('./routes/deleteFromChannel'));
+// app.post('/sendDeleteFromGroup', require('./routes/sendDeleteFromGroup'));
+// app.post('/deleteFromChannel', require('./routes/deleteFromChannel'));
 // app.post('/sendDeleteFromChannel', require('./routes/sendDeleteFromChannel'));
 
 const url = 'mongodb://localhost:27017';
@@ -59,9 +58,9 @@ MongoClient.connect(url, function(err, client) {
     require('./routes/renameGroup')(db, app);
     require('./routes/sendGroupInvite')(db, app);
     require('./routes/sendChannelInvite')(db, app);
-
-
-
+    require('./routes/sendDeleteFromGroup')(db,app);
+    require('./routes/deleteFromChannel')(db, app);
+    require('./routes/sendDeleteFromChannel')(db, app);
 })
 
 // db.groups.insertOne({"groupName":"Group2", "members":[ObjectId("5f71dcf94f9ab96874e19789"), ObjectId("5f71dd354f9ab96874e1978a")], "channels":[{"channelName":"General","members":[ObjectId("5f71dcf94f9ab96874e19789"), ObjectId("5f71dd354f9ab96874e1978a")]},{"channelName":"Channel2","members":[]}]})
