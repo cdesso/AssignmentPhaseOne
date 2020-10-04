@@ -1,12 +1,11 @@
 module.exports = function(db, app) {
-    app.post('/findUsers', function(req, res){
+    app.post('/findUsers', async function(req, res){
         usersArray = [];
-        var collection = db.collection('users');
-        collection.find({}).toArray((err, users)=>{
-            for (i in users){
-                usersArray.push(users[i].username);
-            }
-            res.send(usersArray);
-        })
+        var collection = db.collection('userData');
+        users = await collection.find({}).toArray();
+        for (i in users){
+            usersArray.push({'username': users[i].username, 'role': users[i].role});
+        }
+        res.send(usersArray);
     })
 }

@@ -12,9 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
-var rooms = ['Group1-General'];
 require('./listen.js').listen(http);
-require('./sockets.js').connect(io, rooms);
 // app.post('/api/auth', require('./routes/postLogin'));
 // app.post('/addUser', require('./routes/addUser'));
 // app.post('/findUsers', require('./routes/findUsers'));
@@ -61,6 +59,6 @@ MongoClient.connect(url, function(err, client) {
     require('./routes/sendDeleteFromGroup')(db,app);
     require('./routes/deleteFromChannel')(db, app);
     require('./routes/sendDeleteFromChannel')(db, app);
-})
 
-// db.groups.insertOne({"groupName":"Group2", "members":[ObjectId("5f71dcf94f9ab96874e19789"), ObjectId("5f71dd354f9ab96874e1978a")], "channels":[{"channelName":"General","members":[ObjectId("5f71dcf94f9ab96874e19789"), ObjectId("5f71dd354f9ab96874e1978a")]},{"channelName":"Channel2","members":[]}]})
+    require('./sockets.js').connect(io, db);
+})

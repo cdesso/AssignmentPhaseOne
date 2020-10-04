@@ -30,30 +30,28 @@
 // }
 
 module.exports = function(db, app, ObjectID) {
-    app.post('/findChannels', function(req, res){
-        uName = req.body[0]
-        group = req.body[1]
-        role = req.body[2]
-        channels = []
+    app.post('/findChannels', async function(req, res){
+        uName = req.body[0];
+        group = req.body[1];
+        role = req.body[2];
+        channels = [];
         var collection = db.collection('groups');
         if (role == "SA" || role == "GA"){
-            collection.find({'groupName': group}).toArray((err, data)=>{
-                for (i in data[0].channels){
-                    channels.push(data[0].channels[i].channelName)
-                }
-                res.send(channels)
-            })
+            data = await collection.find({'groupName': group}).toArray();
+            for (i in data[0].channels){
+                channels.push(data[0].channels[i].channelName);
+            }
+            res.send(channels);
         } else {
-            collection.aggregate(
+            data = await collection.aggregate(
                 {'$unwind': '$channels'},
                 {'$match' : {'$and': [{'channels.members.username': uName}, {'groupName': group}]}},
                 {'$group' : '$channels.channelName'}
-            ).toArray((err, data)=>{
-                for (i in data){
-                    channels.push(data[i].channels.channelName)
-                }
-                res.send(channels)
-            })
+            ).toArray();
+            for (i in data){
+                channels.push(data[i].channels.channelName);
+            }
+            res.send(channels);
         }
     })   
 }

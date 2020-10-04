@@ -48,40 +48,32 @@
 
 
 module.exports = function(db, app) {
-    app.post('/addUser', function(req, res){
+    app.post('/addUser', async function(req, res){
         var uName = req.body.NewUsername;
         var email = req.body.NewEmail;
         var pwd = req.body.NewPassword;
         var pwd2 = req.body.NewPassword2;
         var role = req.body.NewRole;
-        console.log(uName + " " + email + " " + pwd + " " + pwd2 + " " + role);
-        if (uName.length <= 3){
-            res.send({'error': 'uNameLength'})
-        }
-        else if (email.length <= 5){
-            res.send({'error': 'emailLength'})
-        }
-        else if (pwd != pwd2){
-            res.send({'error': 'password'})
-        }
-        else if (pwd.length <= 5){
-            res.send({'error': 'passwordLength'})
-        } else {
-            var collection = db.collection('users');
-            collection.find({'username': uName}).toArray((err, data)=>{
-                if (data.length == 0){
-                    collection.insertOne({'username': uName, 'password': pwd}, (err)=>{
-                        if (err) throw err;
-                        collection = db.collection('userData');
-                        collection.insertOne({"username": uName, "email": email, "role": role}, (err)=>{
-                            if (err) throw err;
-                            res.send({'error': null});
-                        });
-                    });
-                } else {
-                    res.send({'error': 'username'})
+        var collection = db.collection('users');
+        var collection2 = db.collection('userData');
+
+        if (uName.length <= 3){   res.send({'error': 'uNameLength'});   }
+        else if (email.length <= 5){   res.send({'error': 'emailLength'});   }
+        else if (pwd != pwd2){   res.send({'error': 'password'});   }
+        else if (pwd.length <= 5){   res.send({'error': 'passwordLength'});   }
+        else {
+            user = await collection.find({'username': uName}).toArray();
+            if (user.length == 0){
+                try{
+                    await collection.insertOne({'username': uName, 'password': pwd});
+                    await collection2.insertOne({"username": uName, "email": email, "role": role});
+                } catch(err){
+                    throw err;
                 }
-            });
+                res.send({'error': null});
+            } else {
+                res.send({'error': 'username'});
+            }
         }
     });
 }

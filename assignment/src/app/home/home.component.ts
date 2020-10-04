@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
       document.getElementById("newInviteChannel2").style.display = "none";
     
   }
-
+  
   newUserForm(){
     if (!this.userForm){
       this.userForm = true;
@@ -167,16 +167,16 @@ export class HomeComponent implements OnInit {
         this.UsersArray = []
       } else {
         for (let i = 0; i < data.length; i++){
-          if (data[i] == this.username){   continue;   }
-          this.UsersArray.push({"username": data[i], "id": i});
+          if (data[i].username == this.username){   continue;   }
+          this.UsersArray.push({"username": data[i].username, "role": data[i].role});
         }
       }
       
     })
   }
 
-  delUser(id){
-    this.httpClient.post(BACKEND_URL + '/delUser', [id], httpOptions).subscribe((data:any)=>{
+  delUser(user){
+    this.httpClient.post(BACKEND_URL + '/delUser', [user], httpOptions).subscribe((data:any)=>{
       this.UsersArray = []
       for (let i = 0; i < data.length; i++){
         if (data[i] != this.username){
@@ -286,8 +286,8 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  upgradeUser(id){
-    this.httpClient.post(BACKEND_URL + '/upgradeUser', [id], httpOptions).subscribe((data:any)=>{
+  upgradeUser(user){
+    this.httpClient.post(BACKEND_URL + '/upgradeUser', [user], httpOptions).subscribe((data:any)=>{
       if(!data){
         alert("User is already a super admin");
       } else {
@@ -358,20 +358,20 @@ export class HomeComponent implements OnInit {
       }
     }
     else {
-      this.sendDeleteFromGroup(this.newDeleteFromGroup)
+      this.sendDeleteFromGroup()
       this.deleteFromGroupForm = false;
       document.getElementById("deleteUserGroup").style.display = "none";
       document.getElementById("deleteUserGroup2").style.display = "none";
     }
   }
 
-  sendDeleteFromGroup(user){
-    if (user != ""){
-      this.httpClient.post(BACKEND_URL + '/sendDeleteFromGroup', [user, this.activeGroup], httpOptions).subscribe((data:any)=>{
+  sendDeleteFromGroup(){
+    if (this.newDeleteFromGroup != ""){
+      this.httpClient.post(BACKEND_URL + '/sendDeleteFromGroup', [this.newDeleteFromGroup, this.activeGroup], httpOptions).subscribe((data:any)=>{
         if (data){
           this.deleteFromGroupForm = false;
+          alert(this.newDeleteFromGroup + " removed from " + this.activeGroup);
           this.newDeleteFromGroup = "";
-          alert(user + " removed from " + this.activeGroup);
         }
       })
     }
@@ -440,7 +440,7 @@ export class HomeComponent implements OnInit {
       this.httpClient.post(BACKEND_URL + '/sendDeleteFromChannel', [this.JoinChannel, this.activeGroup, this.newDeleteFromChannel], httpOptions).subscribe((data:any)=>{
         if (data){
           alert(this.newDeleteFromChannel + " removed from " + this.JoinChannel + " in " + this.activeGroup)
-          this.deleteUserFromChannel(this.JoinChannel);
+          // this.deleteUserFromChannel(this.JoinChannel);
         }
       })
     }

@@ -19,27 +19,25 @@
 // }
 
 module.exports = function(db, app) {
-    app.post('/findGroups', function(req, res){
-        uName = req.body[0]
-        role = req.body[1]
+    app.post('/findGroups', async function(req, res){
+        uName = req.body[0];
+        role = req.body[1];
         userGroups = [];
 
-        var collection = db.collection('groups');
+        var collection = db.collection('groups');        
+
         if (role == "SA" || role == "GA"){
-            collection.find({}).toArray((err, groups)=>{
-                for (i in groups){
-                    userGroups.push(groups[i].groupName);
-                }
-                res.send(userGroups)
-            })
+            groups = await collection.find({}).toArray();
+            for (i in groups){
+                userGroups.push(groups[i].groupName);
+            }
+            res.send(userGroups);
         } else {
-            collection.find({'members': uName}).toArray((err, groups)=>{
-                console.log(groups)
-                for (i in groups){
-                    userGroups.push(groups[i].groupName);
-                }
-                res.send(userGroups)
-            })
+            groups = await collection.find({'members': uName}).toArray();
+            for (i in groups){
+                userGroups.push(groups[i].groupName);
+            }
+            res.send(userGroups);
         }
-    });
+    })
 }

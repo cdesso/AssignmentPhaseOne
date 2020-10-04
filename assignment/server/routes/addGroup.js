@@ -1,19 +1,20 @@
 module.exports = function(db, app) {
-    app.post('/addGroup', function(req, res){
+    app.post('/addGroup', async function(req, res){
         uName = req.body[0];
         var collection = db.collection('groups');
-        collection.countDocuments({},(err, count)=>{
-            newGroup = {'groupName': ("Group" + (count + 1)), 
-                        "members": [], 
-                        "channels": [{
-                            "channelName": "General", 
-                            "members": [{"username": uName}]
-                        }]
-                        };
-            collection.insertOne(newGroup, (err, docs)=>{
-                if (err) throw err;
-                res.send(true);
-            });
-        });
+        count = await collection.countDocuments({});
+        newGroup = {'groupName': ("Group" + (count + 1)), 
+                    "members": [], 
+                    "channels": [{
+                        "channelName": "General", 
+                        "members": [{"username": uName}]
+                    }]
+                    };
+        try{
+            await collection.insertOne(newGroup);
+        } catch (err){
+            throw err;
+        }
+        res.send(true);
     });
 }

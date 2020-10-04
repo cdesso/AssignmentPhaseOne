@@ -24,26 +24,25 @@
 
 
 module.exports = function(db, app) {
-    app.post('/sendChannelInvite', function(req, res){
+    app.post('/sendChannelInvite', async function(req, res){
         uName = req.body[0];
         inviteGroup = req.body[1];
         inviteChannel = req.body[2];
-        
         var collection = db.collection('groups');
-        collection.updateOne({'groupName': inviteGroup}, {'$addToSet': {'members': uName}}, (err, docs)=>{
-            if (err) throw err;
-            collection.updateOne(
+        try {
+            await collection.updateOne({'groupName': inviteGroup}, {'$addToSet': {'members': uName}});
+            await collection.updateOne(
                 {'$and': [
                     {'groupName': inviteGroup}, 
                     {'channels.channelName': inviteChannel}
                 ]}, 
                 {'$push':{
                     'channels.$.members': {'username': uName}
-                }}, (err, docs)=>{
-                if (err) throw err;
-                res.send(true);
-            });
-        });
+                }});
+        } catch (err){
+            throw err;
+        }
+        res.send(true);
     });
 }
     

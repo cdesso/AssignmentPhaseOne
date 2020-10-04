@@ -20,24 +20,23 @@
 // }
 
 module.exports = function(db, app) {
-    app.post('/deleteFromChannel', function (req, res){
+    app.post('/deleteFromChannel', async function (req, res){
         cName = req.body[0];
         gName = req.body[1];
         uName = req.body[2];
-        userArray = []
-
+        userArray = [];
         var collection = db.collection('groups');
-        collection.aggregate(
+
+        data = await collection.aggregate(
             {'$unwind': '$channels'},
             {'$match' : {'$and': [{'groupName': gName}, {'channels.channelName': cName}]}},
             {'$group' : '$channels.channelName'}
-        ).toArray((err, data)=>{
-            for (i in data[0].channels.members){
-                if (data[0].channels.members[i].username != uName){
-                    userArray.push(data[0].channels.members[i].username)
-                }
+        ).toArray();
+        for (i in data[0].channels.members){
+            if (data[0].channels.members[i].username != uName){
+                userArray.push(data[0].channels.members[i].username);
             }
-            res.send(userArray)
-        })
+        }
+        res.send(userArray);
     })
 }

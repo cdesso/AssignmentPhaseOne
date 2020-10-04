@@ -24,25 +24,22 @@
 // }
 
 module.exports = function(db,app){
-    
-    app.post('/api/auth', function(req, res){
+    app.post('/api/auth', async function(req, res){
         if (!req.body){
             return res.sendStatus(400);
         }
-        uName = req.body.username
-        pwd = req.body.password
-        if (uName && pwd){
-            var collection = db.collection('users');
-            collection.find({'username': uName, 'password': pwd}).toArray((err, data)=>{
-                if (data.length == 0){
-                    res.send();
-                } else {
-                    var collection = db.collection('userData')
-                    collection.find({'username': uName}).toArray((err, data2)=>{
-                        res.send(data2);
-                    })
-                }
-            })
+        uName = req.body.username;
+        pwd = req.body.password;
+        var collection = db.collection('users');
+        var collection2 = db.collection('userData');
+        if (uName && pwd){       
+            data = await collection.find({'username': uName, 'password': pwd}).toArray();
+            if (data.length == 0){
+                res.send();
+            } else {
+                data2 = await collection2.find({'username': uName}).toArray();
+                res.send(data2[0]);
+            }
         }
     });
 }
