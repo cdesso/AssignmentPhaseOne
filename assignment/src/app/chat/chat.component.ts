@@ -28,7 +28,7 @@ export class ChatComponent implements OnInit {
     } else {
       this.room = this.GroupChannel[0] + "-" + this.GroupChannel[1];
       this.socketService.initSocket();
-      this.socketService.getMessage((m)=>{this.messages.push(m)});
+      this.socketService.getMessage((m)=>{this.messages = m});
       this.socketService.notice((msg)=>{ this.roomNotice = msg}); 
       this.socketService.joined((msg)=>{ this.room = msg });
       this.joinRoom();
@@ -36,9 +36,10 @@ export class ChatComponent implements OnInit {
   }
 
   joinRoom(){
-    this.socketService.joinRoom(this.room);
+    this.socketService.joinRoom(this.room, this.user);
     this.socketService.requserCount(this.room);
     this.socketService.getuserCount((res)=>{this.userCount = res});
+    this.socketService.send(null, null);
   }
 
   // clearNotice(){
@@ -46,7 +47,7 @@ export class ChatComponent implements OnInit {
   // }
 
   leaveRoom(){
-    this.socketService.leaveRoom(this.room)
+    this.socketService.leaveRoom(this.room, this.user)
     this.socketService.requserCount(this.room);
     this.socketService.getuserCount((res)=>{this.userCount = res});
     this.room = "";

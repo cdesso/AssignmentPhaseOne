@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SharedDataService } from '../services/shared-data.service'
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ImgUploadService } from '../services/img-upload.service';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -23,6 +23,8 @@ export class HomeComponent implements OnInit {
   JoinChannel = "";
   activeGroup = "";
   newGroupName = "";
+
+  //Variables for Adding/Removing users from Groups/Channels
   newInviteGroup = "";
   inviteForm = false;
   inviteUsers = [];
@@ -41,25 +43,26 @@ export class HomeComponent implements OnInit {
 
   renameGroupForm = false;
 
-  //Variables for user creation
+  //Variables for user creation/deletion
   NewUsername = "";
   NewEmail = "";
   NewPassword = "";
   NewPassword2 = "";
   NewRole = "U";
-
   UserError = "";
   EmailError = "";
   PasswordError = "";
 
   userForm = false;
-
-  //Variables for user deletion
   UsersArray=[];
   UserDelete = ""
 
+  //Variables for file upload
+  selectedFile = null;
+  imagePath = "";
 
-  constructor(private router: Router, private httpClient: HttpClient, private shared: SharedDataService) { }
+
+  constructor(private router: Router, private httpClient: HttpClient, private shared: SharedDataService, private imgUploadService: ImgUploadService) { }
 
   ngOnInit(): void {
     if (this.username == null){
@@ -97,7 +100,7 @@ export class HomeComponent implements OnInit {
       document.getElementById("newInviteChannel2").style.display = "none";
     
   }
-  
+
   newUserForm(){
     if (!this.userForm){
       this.userForm = true;
@@ -193,12 +196,17 @@ export class HomeComponent implements OnInit {
   }
 
   findChannels(group){
-    this.JoinChannel = '';
-    this.activeGroup = group;
-    this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, this.activeGroup, this.role], httpOptions).subscribe((data:any)=>{
-      this.userChannels = data;
-    })
-    this.resetForms()
+    if (this.activeGroup != group){
+      this.JoinChannel = '';
+      this.activeGroup = group;
+      this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, this.activeGroup, this.role], httpOptions).subscribe((data:any)=>{
+        this.userChannels = data;
+      })
+      this.resetForms()
+    } else {
+      this.userChannels = [];
+      this.activeGroup = "";
+    }
   }
 
   joinChannel(){
@@ -440,9 +448,22 @@ export class HomeComponent implements OnInit {
       this.httpClient.post(BACKEND_URL + '/sendDeleteFromChannel', [this.JoinChannel, this.activeGroup, this.newDeleteFromChannel], httpOptions).subscribe((data:any)=>{
         if (data){
           alert(this.newDeleteFromChannel + " removed from " + this.JoinChannel + " in " + this.activeGroup)
-          // this.deleteUserFromChannel(this.JoinChannel);
+          this.deleteUserFromChannel(this.JoinChannel);
         }
       })
     }
+  }
+
+  onFileSelected(event){
+    this.selectedFile = event.target.files[0];
+  }
+
+  onUpload(){
+    const fd = new FormData();
+    fd.append('image', this.selectedFile, this.selectedFile.name);
+    
+    this.imgUploadService.imgUpload(fd).subscribe(res=>{
+      this.imagePath = res.data.filename;
+    })
   }
 }
