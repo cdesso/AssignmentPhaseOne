@@ -8,6 +8,6 @@ module.exports = function(db, app) {
         } catch (err){
             throw err;
         }
-        res.send()
+        res.send(true)
     });
 }

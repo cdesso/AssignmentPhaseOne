@@ -4,138 +4,173 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   </head>
 <div class="container">
-    <h3 class="text-center text-info">My Groups</h3>
-    <div class="row groups">
-        <button *ngFor="let group of userGroups" (click)="findChannels(group)" class="col-sm-2 btn btn-info btn-md text-center">{{group}}</button>
-        <button *ngIf="role == 'GA' || role == 'SA'" (click)="addGroup()" class="col-sm-0.5 btn btn-info btn-md text-center" text-center>+</button>
-        <button *ngIf="(role == 'GA' || role == 'SA') && (activeGroup != '')"(click)="deleteGroup()" class="btn btn-info btn-md" style="background-color: red; border-color: red;">Delete {{activeGroup}}</button>
+    <div class="row">
+        <div class="col-lg-3 col-sm-5 groups">
+            <h3 class="text-info text-center">My Groups</h3>
+            <div class="row" *ngFor="let group of userGroups">
+                <button (click)="findChannels(group)" class="btn btn-info btn-md col-md-8 col-sm-8">{{group}}</button>
+                <button *ngIf="(role == 'GA' || role == 'SA') && (activeGroup == group)"(click)="deleteGroup()" class="btn btn-info btn-md col-md-3 col-sm-3 offset-md-1 offset-sm-1" style="background-color: red; border-color: red;">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </div>
+            <br>
+            <div class="row">
+                <button (click)="addGroup()" *ngIf="role == 'GA' || role == 'SA'" class="btn btn-info btn-md addGroup">Add new group</button>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-6 channels" *ngIf="userChannels[0]">
+            <div id="joinChannel">
+                <h3 class="text-info text-center">My Channels</h3>
+                <div class="row">
+                    <label for="JoinChannel" class="text-info">Choose channel: </label>
+                </div>
+                <div class="row">
+                    <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control col-sm-7">
+                        <option *ngFor="let channel of userChannels" value="{{channel}}">{{channel}}</option>
+                    </select>
+
+                    <button (click)="joinChannel()" class="btn btn-info btn-md col-sm-4 offset-sm-1" style="background-color: green; border-color: green;">Join</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-sm-5 channelAdmin" *ngIf="activeGroup != '' && (role == 'GA' || role == 'SA')">
+            <h3 class="text-info text-center">Admin</h3>
+            <div class="row align-items-center">
+                <button (click)="openChannelAdmin()" class="btn btn-info btn-lg col-sm-5" id="channelButton">Channel</button>
+                <button (click)="openGroupAdmin()" class="btn btn-info btn-lg offset-sm-2 col-sm-5" id="groupButton">Group</button>
+            </div>
+            <div class="row" *ngIf="(JoinChannel != '') && channelAdmin">
+                <button *ngIf="!inviteChannelForm" (click)="inviteChannel(activeGroup, JoinChannel)" class="btn btn-info btn-md">Invite users to {{JoinChannel}}</button>
+                <div class="row col-sm-12" *ngIf="inviteChannelForm" >
+                    <select [(ngModel)]="newInviteChannel" name="newInviteChannel" class="form-control col-sm-7">
+                        <option *ngFor="let user of inviteChannelUsers" value="{{user}}">{{user}}</option>
+                    </select>
+                    <button (click)="sendChannelInvite(newInviteChannel, activeGroup, JoinChannel)" class="btn btn-info btn-md offset-sm-1 col-sm-4" style="background-color: green; border-color: green;">Add</button>
+                </div>
+            </div>
+            <div class="row" *ngIf="(JoinChannel != '') && channelAdmin">
+                <button *ngIf="!deleteFromChannelForm" (click)="deleteUserFromChannel(JoinChannel)" class="btn btn-info btn-md">Remove users from {{JoinChannel}}</button>
+                <div class="row col-sm-12" *ngIf="deleteFromChannelForm">
+                    <select  [(ngModel)]="newDeleteFromChannel" name="newDeleteFromChannel" class="form-control col-sm-7">
+                        <option *ngFor="let user of deleteUsersFromChannel" value="{{user}}">{{user}}</option>
+                    </select>
+                    <button (click)="sendDeleteFromChannel()" class="btn btn-info btn-md offset-sm-1 col-sm-4" style="background-color: red; border-color: red;">Remove</button>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="channelAdmin">
+                <button  (click)="addChannel()" class="btn btn-info btn-md addChannel">Create new channel</button>
+            </div>
+            <div class="row" *ngIf="(JoinChannel != '') && channelAdmin">
+                <button (click)="deleteChannel()" class="btn btn-info btn-md" style="background-color: red; border-color: red;">Delete {{JoinChannel}}</button>
+            </div>
+
+
+            <div class="row" *ngIf="(activeGroup != '') && groupAdmin">
+                <button *ngIf="!inviteForm" (click)="inviteGroup(activeGroup)" class="btn btn-info btn-md">Invite users to {{activeGroup}}</button>
+                <div class="row col-sm-12" *ngIf="inviteForm">
+                    <select  [(ngModel)]="newInviteGroup" name="newInviteGroup" class="form-control col-sm-7">
+                        <option *ngFor="let user of inviteUsers" value="{{user}}">{{user}}</option>
+                    </select>
+                    <button (click)="sendGroupInvite()" class="btn btn-info btn-md offset-sm-1 col-sm-4" style="background-color: green; border-color: green;">Invite</button>
+                </div>
+            </div>
+            <div class="row" *ngIf="(activeGroup != '') && groupAdmin">
+                <button *ngIf="!deleteFromGroupForm" (click)="deleteFromGroup()" class="btn btn-info btn-md">Remove users from {{activeGroup}}</button>
+                <div class="row col-sm-12" *ngIf="deleteFromGroupForm">
+                    <select  [(ngModel)]="newDeleteFromGroup" name="newDeleteFromGroup" class="form-control col-sm-7">
+                        <option *ngFor="let user of deleteUsersFromGroup" value="{{user}}">{{user}}</option>
+                    </select>
+                    <button (click)="sendDeleteFromGroup()" class="btn btn-info btn-md offset-sm-1 col-sm-4" style="background-color: red; border-color: red;">Remove</button>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="(activeGroup != '') && groupAdmin">
+                <button *ngIf="!renameGroupForm" (click)="renameGroup()" class="btn btn-info btn-md">Rename Group</button>
+
+                <form *ngIf="renameGroupForm">
+                    <input type="text" [(ngModel)]="newGroupName" placeholder="{{activeGroup}}" name="groupName" class="form-control col-sm-6">
+                    <button (click)="renameGroup()" class="btn btn-info btn-md offset-sm-1">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
-    
-
-    <div id="joinChannel" *ngIf="userChannels[0]">
-        <div class="row">
-            <label for="JoinChannel" class="text-info">Choose channel: </label>
+    <div class="row">
+        <div class="userAdmin" *ngIf="role == 'GA' || role == 'SA'">
+            <h3 class="text-info text-center">Users</h3>
+            <div class="row">
+                <div class="SA" *ngIf="role == 'SA'">
+                    <div class="del">
+                        <button (click)="findUsers()" class="btn btn-info btn-md">Admin</button>
+                        <div class="userTable" *ngIf="UsersArray[0]">
+                            <table>
+                                <tr *ngFor="let user of UsersArray">
+                                    <td>{{user.username}}</td>
+                                    <td ><a *ngIf="user.role != 'SA'" (click)="upgradeUser(user.username)" class="btn btn-info btn-sm">Make super admin</a></td>
+                                    <td><a (click)="delUser(user.username)" class="glyphicon glyphicon-trash" id="deleteUser"></a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="newUser">
+                    <div class="newUserButton">
+                        <button (click)="newUserForm()" class="btn btn-info btn-md">New User</button>
+                    </div>
+                    <div id="userForm">
+                        <div class="form-group">
+                            <label for="NewUsername" class="text-info">Username:</label>
+                            <input type="text" [(ngModel)]="NewUsername" name="NewUsername" id="NewUsername" class="form-control">
+                            <span class="error">{{UserError}}</span>
+                        </div>
+                        
+        
+                        <div class="form-group">
+                            <label for="NewEmail" class="text-info">Email:</label>
+                            <input type="text" [(ngModel)]="NewEmail" name="NewEmail" id="NewEmail" class="form-control">
+                            <span class="error">{{EmailError}}</span>
+                        </div>
+        
+                        <div class="form-group">
+                            <label for="NewPassword" class="text-info">Password:</label>
+                            <input type="password"  [(ngModel)]="NewPassword" name="NewPassword" id="NewPassword" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="NewPassword2" class="text-info">Confirm Password:</label>
+                            <input type="password"  [(ngModel)]="NewPassword2" name="NewPassword2" id="NewPassword2" class="form-control">
+                            <span class="error">{{PasswordError}}</span>
+                        </div>
+        
+                        <div class="form-group" *ngIf=" role == 'SA' ">
+                            <p class="text-info" style="font-weight: bold;">Make Group Admin?</p>
+                            <div class="form-check">
+                                <input class="form-check-input" [(ngModel)]="NewRole" type="radio" id="yes" name="newGA" value="GA">
+                                <label class="form-check-label" for="yes">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" [(ngModel)]="NewRole" type="radio" id="no" name="newGA" value="U" checked="checked">
+                                <label class="form-check-label" for="no">No</label>
+                            </div>
+                        </div>
+        
+                        <div class="form-group">
+                            <button (click)="addUser()" class="btn btn-info btn-md">Create</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <select  [(ngModel)]="JoinChannel" name="JoinChannel" id="JoinChannel" class="form-control col-sm-9">
-                <option *ngFor="let channel of userChannels" value="{{channel}}">{{channel}}</option>
-            </select>
-            <span *ngIf="role == 'GA' || role == 'SA'">
-                <button  (click)="addChannel()" class="col-sm-0.5 btn btn-info btn-md addChannel">+</button>
-                <button *ngIf="JoinChannel != ''" (click)="deleteChannel()" class="btn btn-info btn-md" style="background-color: red; border-color: red;">Delete {{JoinChannel}}</button>
-            </span>
-        </div>
-        <div class="row" *ngIf="JoinChannel != ''">
-            <button (click)="joinChannel(activeGroup, JoinChannel)" class="btn btn-info btn-md" style="background-color: green; border-color: green;">Join</button>
-            <span *ngIf="role == 'GA' || role == 'SA'">
-                <button (click)="inviteChannel(activeGroup, JoinChannel)" class="btn btn-info btn-md">Invite users to {{JoinChannel}}</button>
-                <button (click)="deleteUserFromChannel(JoinChannel)" class="btn btn-info btn-md">Remove users from {{JoinChannel}}</button>
-            </span>
-        </div>
-        <div class="row">
-            <select [(ngModel)]="newInviteChannel" name="newInviteChannel" id="newInviteChannel" class="form-control col-sm-4" style="margin: 5px;">
-                <option *ngFor="let user of inviteChannelUsers" value="{{user}}">{{user}}</option>
-            </select>
-            <button (click)="sendChannelInvite(newInviteChannel, activeGroup, JoinChannel)" class="btn btn-info btn-md" id="newInviteChannel2" style="background-color: green; border-color: green;">Add</button>
-        </div>
-        <div class="row">
-            <select  [(ngModel)]="newDeleteFromChannel" name="newDeleteFromChannel" id="deleteUserChannel" class="form-control col-sm-4" style="margin: 5px;">
-                <option *ngFor="let user of deleteUsersFromChannel" value="{{user}}">{{user}}</option>
-            </select>
-            <button (click)="sendDeleteFromChannel()" class="btn btn-info btn-md" id="deleteUserChannel2" style="background-color: red; border-color: red;">Remove</button>
-        </div>
-    </div><br><br>
-    <div class="row invDelGroup" *ngIf="(userChannels[0]) && (role == 'GA' || role == 'SA')">
-        <button class="inviteGroup" (click)="inviteGroup(activeGroup)" class="btn btn-info btn-md">Invite users to {{activeGroup}}</button>
-        <button class="deleteFromGroup" (click)="deleteFromGroup(activeGroup)" class="btn btn-info btn-md">Remove users from {{activeGroup}}</button>
-        <button (click)="renameGroup()" class="btn btn-info btn-md">Rename Group</button>
     </div>
-    <div class="row" *ngIf="(userChannels[0]) && (role == 'GA' || role == 'SA')">
-        <form>
-            <input type="text" [(ngModel)]="newGroupName" placeholder="{{activeGroup}}" name="groupName" class="form-control col-sm-6" id="renameBox">
-            <button (click)="renameGroup()" class="btn btn-info btn-md" id="renameBox2">Submit</button>
-        </form>
-        <select  [(ngModel)]="newDeleteFromGroup" name="newDeleteFromGroup" id="deleteUserGroup" class="form-control col-sm-6">
-            <option *ngFor="let user of deleteUsersFromGroup" value="{{user}}">{{user}}</option>
-        </select>
-        <button (click)="sendDeleteFromGroup()" class="btn btn-info btn-md" id="deleteUserGroup2" style="background-color: red; border-color: red;">Delete</button>
-        <select  [(ngModel)]="newInviteGroup" name="newInviteGroup" id="newInviteGroup" class="form-control col-sm-6">
-            <option *ngFor="let user of inviteUsers" value="{{user}}">{{user}}</option>
-        </select>
-        <button class="inviteGroup" (click)="inviteGroup(activeGroup)" class="btn btn-info btn-md" id="newInviteGroup2" style="background-color: green; border-color: green;">Invite</button>
-
-    </div><br><br>
-
-    <div class="GroupAdmin row" *ngIf="role == 'GA' || role == 'SA'">
-        <div class="newUser col-sm-6">
-            <div class="SA" *ngIf="role == 'SA'">
-                <div class="del">
-                    <button (click)="findUsers()" class="btn btn-info btn-md">Admin</button>
-                    <div class="userTable" *ngIf="UsersArray[0]">
-                        <table>
-                            <tr *ngFor="let user of UsersArray">
-                                <td>{{user.username}}</td>
-                                <td ><a *ngIf="user.role != 'SA'" (click)="upgradeUser(user.username)" class="btn btn-info btn-sm">Make super admin</a></td>
-                                <td><a (click)="delUser(user.username)" class="glyphicon glyphicon-trash" id="deleteUser"></a></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="newUser col-sm-6">
-            <div class="newUserButton">
-                <button (click)="newUserForm()" class="btn btn-info btn-md">New User</button>
-            </div>
-            <div id="userForm">
-                <div class="form-group">
-                    <label for="NewUsername" class="text-info">Username:</label>
-                    <input type="text" [(ngModel)]="NewUsername" name="NewUsername" id="NewUsername" class="form-control">
-                    <span class="error">{{UserError}}</span>
-                </div>
-                
-
-                <div class="form-group">
-                    <label for="NewEmail" class="text-info">Email:</label>
-                    <input type="text" [(ngModel)]="NewEmail" name="NewEmail" id="NewEmail" class="form-control">
-                    <span class="error">{{EmailError}}</span>
-                </div>
-
-                <div class="form-group">
-                    <label for="NewPassword" class="text-info">Password:</label>
-                    <input type="password"  [(ngModel)]="NewPassword" name="NewPassword" id="NewPassword" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="NewPassword2" class="text-info">Confirm Password:</label>
-                    <input type="password"  [(ngModel)]="NewPassword2" name="NewPassword2" id="NewPassword2" class="form-control">
-                    <span class="error">{{PasswordError}}</span>
-                </div>
-
-                <div class="form-group" *ngIf=" role == 'SA' ">
-                    <p class="text-info" style="font-weight: bold;">Make Group Admin?</p>
-                    <div class="form-check">
-                        <input class="form-check-input" [(ngModel)]="NewRole" type="radio" id="yes" name="newGA" value="GA">
-                        <label class="form-check-label" for="yes">Yes</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" [(ngModel)]="NewRole" type="radio" id="no" name="newGA" value="U" checked="checked">
-                        <label class="form-check-label" for="no">No</label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button (click)="addUser()" class="btn btn-info btn-md">Create</button>
-                </div>
-            </div>
-        </div>
-        <h1>File Upload</h1>
+</div>
+        <!-- <h1>File Upload</h1>
         <form>
             <div class="form-group">
                 <input type="file" class="form-control" (change)="onFileSelected($event)" name="uploadFile" id="uploadFile"/>
             </div>
             <div class="btn btn-primary" type="button" (click)="onUpload()">Submit</div>
         </form>
-        <img src="images\{{imagePath}}">
-    </div>
-</div>
+        <img src="images\{{imagePath}}"> -->
+
 

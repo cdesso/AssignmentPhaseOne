@@ -1,21 +1,36 @@
 <body>
     <div class="container">
-        <h4>You are chatting in {{GroupChannel[0]}} > {{GroupChannel[1]}}</h4>
-        <form>
-            <div class="form-group">
-                <label for="messagecontent">New Message</label>
-                <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messagecontent" class="messagecontent"/>
+        <div class="row">
+            <h5 class="text-info">You are chatting in {{GroupChannel[0]}} > {{GroupChannel[1]}}</h5>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 chat">
+                <div class="row justify-content-between" style="margin-top: 1.25em;">
+                    <button (click)="leaveRoom()" class="btn btn-primary">Leave chat</button>
+                    <h5 class="text-info">{{roomNotice}}</h5>
+                </div>
+                <div class="col-12 message">
+                    <div class="row" *ngFor="let message of messages" style="margin-top: 0.5em;">
+                        <div class="col-sm-3 col-md-2 image">
+                            <img src="../../assets/images/user.png">
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="row uName">
+                                {{message[0]}}
+                            </div>
+                            <div class="row content">
+                                {{message[1]}}                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row input">
+                    <form style="width: 100%">
+                        <input type="text" [(ngModel)]="messagecontent" name="messagecontent" id="messagecontent" class="messagecontent" style="width: 75%;"/>
+                        <button (click)="chat()" class="btn btn-primary" style="width: 20%;">Chat</button>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <button (click)="chat()" class="btn btn-primary">Chat</button>
-            </div>
-        </form>
-        <button (click)="leaveRoom()" class="btn btn-primary">Leave chat</button>
-
-        {{roomNotice}}
-        <h3>Chat Messages</h3>
-        <ul>
-            <li *ngFor="let message of messages">{{message[0]}}: {{message[1]}}</li>
-        </ul>
+        </div>
     </div>
 </body>

@@ -1,0 +1,30 @@
+.container > .row{
+    justify-content: center;
+}
+.image > img{
+    width: 50px;
+    border-radius: 5em;
+}
+.chat > div{
+    margin: .5em;
+}
+.chat{
+    background-color: lightblue;
+    border-radius: .5em;
+}
+.uName{
+    font-weight: bold;
+}
+input[type=text]{
+    border-radius: .25em;
+    border-width: 0px;
+    margin-right: 2.5%;
+    height: 2em;
+}
+.input{
+    justify-content: center;
+}
+.message{
+    height:200px;
+    overflow-y: scroll;
+}

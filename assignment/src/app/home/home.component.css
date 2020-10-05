@@ -1,58 +1,25 @@
-/* .error{
-    color: red;
-}
-
-.newUser{
-    padding: 20px;
-    background-color: lightgray;
-    border-radius: 10px;
-    width: 40%;
-}
-
-#JoinChannel{
-    margin-right: .5em;
-}
-th, tr, td{
-    padding:5px;
-}
-
-
-
-#channelButton > button{
-    margin-right: 10px;
-    margin-top: 5px;
-}
-
-.inviteGroup{
-    margin-top: 5px;
-}
-
-
-#deleteUser{
-    font-size: 1.5em;
-
-}    
-
-
-.newUserButton{
-    padding-bottom: 1em;
-}*/
-.groups, .container{
+.container{
     justify-content: center;
 }
 td{
     padding: .5em;
 }
-.groups > button{
-    margin-right: 20px;
+.groups, .channels, .channelAdmin, .userAdmin{
+    background-color: lightblue;
+    border-radius: .5em;
+    
+}
+.groups > div, .channels > div, #joinChannel > div, .channelAdmin > div, .userAdmin > div{
+    margin: .5em;
+}
+.row > div{
+    margin: 1.25%;
 }
 
-#newInviteGroup, #newInviteGroup2, #deleteUserGroup, #deleteUserGroup2, #deleteUserChannel, #deleteUserChannel2, #newInviteChannel, #newInviteChannel2{
-    display: none;
-} 
-#renameBox, #renameBox2{
-    display: none;
-    margin: 3px;
+.addGroup{
+    background-color: green;
+    border-color: green;
+    
 }
 
 #userForm{
@@ -62,16 +29,7 @@ td{
 .form-check-label{
     text-indent: 1.5em;
 }
-.row{
-    padding-top: .5em;
-}
-.row > button, span > button{
-    margin-right: 5px;
-}
 
-.addChannel{
-    margin-left: 5px;
-}
-#deleteUserGroup, #newInviteGroup{
-    margin: .5em;
-}
+/* span > button{
+    margin-right: 5px;
+} */

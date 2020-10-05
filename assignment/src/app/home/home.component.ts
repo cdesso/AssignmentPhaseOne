@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   JoinChannel = "";
   activeGroup = "";
   newGroupName = "";
+  renameGroupForm = false
 
   //Variables for Adding/Removing users from Groups/Channels
   newInviteGroup = "";
@@ -40,8 +41,6 @@ export class HomeComponent implements OnInit {
   newDeleteFromChannel = "";
   deleteFromChannelForm = false;
   deleteUsersFromChannel = [];
-
-  renameGroupForm = false;
 
   //Variables for user creation/deletion
   NewUsername = "";
@@ -61,6 +60,9 @@ export class HomeComponent implements OnInit {
   selectedFile = null;
   imagePath = "";
 
+  //Admin Tabs
+  channelAdmin = false;
+  groupAdmin = false;
 
   constructor(private router: Router, private httpClient: HttpClient, private shared: SharedDataService, private imgUploadService: ImgUploadService) { }
 
@@ -71,34 +73,36 @@ export class HomeComponent implements OnInit {
     this.findGroups();
   }
 
-  resetForms(){
-    
+  openChannelAdmin(){
+    if(!this.channelAdmin){
+      this.groupAdmin = false;
+      document.getElementById("groupButton").style.backgroundColor = "";
       this.inviteForm = false;
-      this.newInviteGroup = "";
-      document.getElementById("newInviteGroup").style.display = "none";
-      document.getElementById("newInviteGroup2").style.display = "none";
-    
-    
       this.deleteFromGroupForm = false;
-      this.newDeleteFromGroup = "";
-      document.getElementById("deleteUserGroup").style.display = "none";
-      document.getElementById("deleteUserGroup2").style.display = "none";
-    
-      this.newGroupName = "";
-      this.renameGroupForm = false;
-      document.getElementById("renameBox").style.display = "none";
-      document.getElementById("renameBox2").style.display = "none";
-
-      this.deleteFromChannelForm = false;
-      this.newDeleteFromChannel = ""
-      document.getElementById("deleteUserChannel").style.display = "none";
-      document.getElementById("deleteUserChannel2").style.display = "none";
-
+      this.channelAdmin = true;
+      document.getElementById("channelButton").style.backgroundColor = "#0000ff";
+    } else{
+      this.channelAdmin = false;
+      document.getElementById("channelButton").style.backgroundColor = "";
       this.inviteChannelForm = false;
-      this.newInviteChannel = "";
-      document.getElementById("newInviteChannel").style.display = "none";
-      document.getElementById("newInviteChannel2").style.display = "none";
-    
+      this.deleteFromChannelForm = false;
+    }
+  }
+  openGroupAdmin(){
+    if(!this.groupAdmin){
+      this.channelAdmin = false;
+      document.getElementById("channelButton").style.backgroundColor = "";
+      this.inviteChannelForm = false;
+      this.deleteFromChannelForm = false;
+      this.groupAdmin = true;
+      document.getElementById("groupButton").style.backgroundColor = "#0000ff";
+
+    } else{
+      this.groupAdmin = false;
+      this.inviteForm = false;
+      this.deleteFromGroupForm = false;
+      document.getElementById("groupButton").style.backgroundColor = "";
+    }
   }
 
   newUserForm(){
@@ -196,23 +200,19 @@ export class HomeComponent implements OnInit {
   }
 
   findChannels(group){
-    if (this.activeGroup != group){
       this.JoinChannel = '';
       this.activeGroup = group;
       this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, this.activeGroup, this.role], httpOptions).subscribe((data:any)=>{
         this.userChannels = data;
       })
-      this.resetForms()
-    } else {
-      this.userChannels = [];
-      this.activeGroup = "";
-    }
   }
 
-  joinChannel(){
-    let room = this.activeGroup + "-" + this.JoinChannel;
-    this.shared.changeMessage([this.activeGroup, this.JoinChannel]);
-    this.router.navigate(['/chat']);
+  joinChannel(){    
+    if (this.JoinChannel != ""){
+      let room = this.activeGroup + "-" + this.JoinChannel;
+      this.shared.changeMessage([this.activeGroup, this.JoinChannel]);
+      this.router.navigate(['/chat']);
+    }
   }
 
   addGroup(){
@@ -248,25 +248,14 @@ export class HomeComponent implements OnInit {
   renameGroup() {
     if (!this.renameGroupForm){
       this.renameGroupForm = true;
-      document.getElementById("renameBox").style.display = "block";
-      document.getElementById("renameBox2").style.display = "block";
-
-      if (this.deleteFromGroupForm == true){
+      if (this.deleteFromGroupForm || this.inviteForm){
         this.deleteFromGroupForm = false;
         this.newDeleteFromGroup = "";
-        document.getElementById("deleteUserGroup").style.display = "none";
-        document.getElementById("deleteUserGroup2").style.display = "none";
-      } else if (this.inviteForm == true){
         this.inviteForm = false;
         this.newInviteGroup = "";
-        document.getElementById("newInviteGroup").style.display = "none";
-        document.getElementById("newInviteGroup2").style.display = "none";
       }
-    }
-    else {
+    } else {
       this.renameGroupForm = false;
-      document.getElementById("renameBox").style.display = "none";
-      document.getElementById("renameBox2").style.display = "none";
       if (this.newGroupName != ""){
         alert("Changing name of " + this.activeGroup + " to " + this.newGroupName);
         this.httpClient.post(BACKEND_URL + '/renameGroup', [this.activeGroup, this.newGroupName], httpOptions).subscribe((data:any)=>{
@@ -307,77 +296,60 @@ export class HomeComponent implements OnInit {
   inviteGroup(group){
     if (!this.inviteForm){
       this.httpClient.post(BACKEND_URL + '/findInvite', [group], httpOptions).subscribe((data:any)=>{
-        this.inviteUsers = data
+        if (data.length == 0){
+          this.inviteForm = false;
+          alert("No users left to invite");
+        } else {
+          this.inviteUsers = data;
+        }
       })
       this.inviteForm = true;
-      document.getElementById("newInviteGroup").style.display = "block";
-      document.getElementById("newInviteGroup2").style.display = "block";
       if (this.deleteFromGroupForm == true){
         this.deleteFromGroupForm = false;
         this.newDeleteFromGroup = "";
-        document.getElementById("deleteUserGroup").style.display = "none";
-        document.getElementById("deleteUserGroup2").style.display = "none";
-      } else if (this.renameGroupForm == true){
-        this.newGroupName = "";
-        this.renameGroupForm = false;
-        document.getElementById("renameBox").style.display = "none";
-        document.getElementById("renameBox2").style.display = "none";
       }
-    }
-    else {
-      this.sendGroupInvite(this.newInviteGroup, this.activeGroup)
-      this.inviteForm = false;
-      document.getElementById("newInviteGroup").style.display = "none";
-      document.getElementById("newInviteGroup2").style.display = "none";
     }
   }
 
-  sendGroupInvite(user, group){
-    if (user != ""){
-      this.httpClient.post(BACKEND_URL + '/sendGroupInvite', [user, group], httpOptions).subscribe((data:any)=>{
+  sendGroupInvite(){
+    this.inviteForm = false;
+    if (this.newInviteGroup != ""){
+      this.httpClient.post(BACKEND_URL + '/sendGroupInvite', [this.newInviteGroup, this.activeGroup], httpOptions).subscribe((data:any)=>{
         if (data){
-          this.inviteForm = false;
+          alert(this.newInviteGroup + " added to " + this.activeGroup)
           this.newInviteGroup = "";
-          alert(user + " added to " + group)
         }
       })
     }
   }
 
-  deleteFromGroup(group){
+  deleteFromGroup(){
     if (!this.deleteFromGroupForm){
-      this.httpClient.post(BACKEND_URL + '/deleteFromGroup', [group, this.username], httpOptions).subscribe((data:any)=>{
-        this.deleteUsersFromGroup = data
+      this.httpClient.post(BACKEND_URL + '/deleteFromGroup', [this.activeGroup, this.username], httpOptions).subscribe((data:any)=>{
+        if (data.length == 0){
+          this.deleteFromGroupForm = false;
+          alert("No users to delete");
+        } else {
+          this.deleteUsersFromGroup = data;
+        }
       })
       this.deleteFromGroupForm = true;
-      document.getElementById("deleteUserGroup").style.display = "block";
-      document.getElementById("deleteUserGroup2").style.display = "block";
-
       if (this.inviteForm == true){
         this.inviteForm = false;
         this.newInviteGroup = "";
-        document.getElementById("newInviteGroup").style.display = "none";
-        document.getElementById("newInviteGroup2").style.display = "none";
-      } else if (this.renameGroupForm == true){
+      } 
+      else if (this.renameGroupForm == true){
         this.newGroupName = "";
         this.renameGroupForm = false;
-        document.getElementById("renameBox").style.display = "none";
-        document.getElementById("renameBox2").style.display = "none";
       }
-    }
-    else {
-      this.sendDeleteFromGroup()
-      this.deleteFromGroupForm = false;
-      document.getElementById("deleteUserGroup").style.display = "none";
-      document.getElementById("deleteUserGroup2").style.display = "none";
     }
   }
 
   sendDeleteFromGroup(){
+    this.deleteFromGroupForm = false;
     if (this.newDeleteFromGroup != ""){
       this.httpClient.post(BACKEND_URL + '/sendDeleteFromGroup', [this.newDeleteFromGroup, this.activeGroup], httpOptions).subscribe((data:any)=>{
         if (data){
-          this.deleteFromGroupForm = false;
           alert(this.newDeleteFromGroup + " removed from " + this.activeGroup);
           this.newDeleteFromGroup = "";
         }
@@ -388,32 +360,29 @@ export class HomeComponent implements OnInit {
   inviteChannel(group, channel){
     if (!this.inviteChannelForm){
       this.httpClient.post(BACKEND_URL + '/findChannelInvite', [group, channel], httpOptions).subscribe((data:any)=>{
-        this.inviteChannelUsers = data
+        if (data.length == 0){
+          this.inviteChannelForm = false;
+          alert("No users left to invite")
+        } else {
+          this.inviteChannelUsers = data
+        }
       })
       this.inviteChannelForm = true;
-      document.getElementById("newInviteChannel").style.display = "block";
-      document.getElementById("newInviteChannel2").style.display = "block";
+      
       if (this.deleteFromChannelForm == true){
         this.deleteFromChannelForm = false;
         this.newDeleteFromChannel = "";
-        document.getElementById("deleteUserChannel").style.display = "none";
-        document.getElementById("deleteUserChannel2").style.display = "none";
       }
-    }
-    else{
-      this.inviteChannelForm = false;
-      this.newInviteChannel = "";
-      document.getElementById("newInviteChannel").style.display = "none";
-      document.getElementById("newInviteChannel2").style.display = "none";
     }
   }
 
   sendChannelInvite(user, group, channel){
+    this.inviteChannelForm = false;
     if (user != ""){
       this.httpClient.post(BACKEND_URL + '/sendChannelInvite', [user, group, channel], httpOptions).subscribe((data:any)=>{
         if (data){
-          this.inviteChannel(group, channel);
           alert(user + " added to " + channel)
+          this.newInviteChannel = "";
         }
       })
     }
@@ -422,33 +391,28 @@ export class HomeComponent implements OnInit {
   deleteUserFromChannel(channel){
     if (!this.deleteFromChannelForm){
       this.httpClient.post(BACKEND_URL + '/deleteFromChannel', [channel, this.activeGroup, this.username], httpOptions).subscribe((data:any)=>{
+        if (data.length == 0){
+          this.deleteFromChannelForm = false;
+          alert("No users left to invite")
+        } else {
         this.deleteUsersFromChannel = data
+        }
       })
       this.deleteFromChannelForm = true;
-      document.getElementById("deleteUserChannel").style.display = "block";
-      document.getElementById("deleteUserChannel2").style.display = "block";
     }
-    else {
-      this.deleteFromChannelForm = false;
-      this.newDeleteFromChannel = ""
-      document.getElementById("deleteUserChannel").style.display = "none";
-      document.getElementById("deleteUserChannel2").style.display = "none";
 
-    }
     if (this.inviteChannelForm == true){
       this.inviteChannelForm = false;
       this.newInviteChannel = "";
-      document.getElementById("newInviteChannel").style.display = "none";
-      document.getElementById("newInviteChannel2").style.display = "none";
     }
   }
 
   sendDeleteFromChannel(){
+    this.deleteFromChannelForm = false;
     if (this.newDeleteFromChannel != ""){
       this.httpClient.post(BACKEND_URL + '/sendDeleteFromChannel', [this.JoinChannel, this.activeGroup, this.newDeleteFromChannel], httpOptions).subscribe((data:any)=>{
         if (data){
           alert(this.newDeleteFromChannel + " removed from " + this.JoinChannel + " in " + this.activeGroup)
-          this.deleteUserFromChannel(this.JoinChannel);
         }
       })
     }

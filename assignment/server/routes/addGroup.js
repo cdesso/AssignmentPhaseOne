@@ -22,6 +22,5 @@ module.exports = function(db, app) {
             }
             res.send(true);
         }
-        
     });
 }
