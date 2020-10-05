@@ -70,7 +70,7 @@ module.exports = function(db, app) {
                 } catch(err){
                     throw err;
                 }
-                res.send({'error': null});
+                res.send({'error': false});
             } else {
                 res.send({'error': 'username'});
             }

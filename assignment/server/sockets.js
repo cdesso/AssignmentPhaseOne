@@ -38,9 +38,7 @@ module.exports = {
                             throw err;
                         }
                         
-                        console.log(groups[0].channels[0].messages);
                         chat.to(socketRoom[i][1]).emit('message', groups[0].channels[0].messages);
-
                     }
                 }
             })

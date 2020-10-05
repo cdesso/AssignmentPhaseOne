@@ -8,8 +8,8 @@
         <div class="col-lg-3 col-sm-5 groups">
             <h3 class="text-info text-center">My Groups</h3>
             <div class="row" *ngFor="let group of userGroups">
-                <button (click)="findChannels(group)" class="btn btn-info btn-md col-md-8 col-sm-8">{{group}}</button>
-                <button *ngIf="(role == 'GA' || role == 'SA') && (activeGroup == group)"(click)="deleteGroup()" class="btn btn-info btn-md col-md-3 col-sm-3 offset-md-1 offset-sm-1" style="background-color: red; border-color: red;">
+                <button (click)="findChannels(group)" class="btn btn-info btn-md col-sm-8">{{group}}</button>
+                <button *ngIf="(role == 'GA' || role == 'SA') && (activeGroup == group)"(click)="deleteGroup()" class="btn btn-info btn-md col-md-3 col-sm-3 offset-md-1 offset-sm-1">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </div>
@@ -30,7 +30,7 @@
                         <option *ngFor="let channel of userChannels" value="{{channel}}">{{channel}}</option>
                     </select>
 
-                    <button (click)="joinChannel()" class="btn btn-info btn-md col-sm-4 offset-sm-1" style="background-color: green; border-color: green;">Join</button>
+                    <button (click)="joinChannel()" class="btn btn-info btn-md col-sm-4 offset-sm-1">Join</button>
                 </div>
             </div>
         </div>

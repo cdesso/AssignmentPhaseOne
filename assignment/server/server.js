@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
 const formidable = require('formidable');
 const url = 'mongodb://localhost:27017';
+module.exports = app;
 
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: true}));
