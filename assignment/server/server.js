@@ -50,8 +50,8 @@ MongoClient.connect(url, function(err, client) {
 
     require('./sockets.js').connect(io, db); // Route responsible for socket support (chat)
 
-    require('./unitTest/getDB')(db, app); // 
-    require('./unitTest/clearDB')(db, app);
-    require('./unitTest/restoreDB')(db, app); // 
+    require('./unitTest/getDB')(db, app); // Route to retreive all data in DB
+    require('./unitTest/clearDB')(db, app); // Route to clear the DB
+    require('./unitTest/restoreDB')(db, app); // Route to restore the DB data
 
 })
