@@ -36,6 +36,7 @@ export class ChatComponent implements OnInit {
   }
 
   joinRoom(){
+    // Methods to carry out when joining a room
     this.socketService.joinRoom(this.room, this.user);
     this.socketService.requserCount(this.room);
     this.socketService.getuserCount((res)=>{this.userCount = res});
@@ -47,6 +48,7 @@ export class ChatComponent implements OnInit {
   // }
 
   leaveRoom(){
+    // Methods to carry out when leaving a room
     this.socketService.leaveRoom(this.room, this.user)
     this.socketService.requserCount(this.room);
     this.socketService.getuserCount((res)=>{this.userCount = res});
@@ -59,6 +61,7 @@ export class ChatComponent implements OnInit {
   }
 
   chat(){
+    // Responsible for handling chat messages
     if (this.messagecontent){
       this.socketService.send(this.user, this.messagecontent);
       this.messagecontent=null;

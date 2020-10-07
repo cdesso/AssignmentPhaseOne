@@ -74,6 +74,7 @@ export class HomeComponent implements OnInit {
   }
 
   openChannelAdmin(){
+    // Toggling channel admin menu
     if(!this.channelAdmin){
       this.channelAdmin = true;
     } else{
@@ -84,6 +85,7 @@ export class HomeComponent implements OnInit {
   }
   
   openGroupAdmin(){
+    // Toggling group admin menu
     if(!this.groupAdmin){
       this.groupAdmin = true;
     } else{
@@ -94,6 +96,7 @@ export class HomeComponent implements OnInit {
   }
 
   newUserForm(){
+    // Toggling user form
     if (!this.userForm){
       this.userForm = true;
     } else {
@@ -102,6 +105,7 @@ export class HomeComponent implements OnInit {
   }
 
   addUser(){
+    // Method for new users, post to server route and handle response from server
     let newUser = {
       NewUsername: this.NewUsername,
       NewEmail: this.NewEmail,
@@ -155,6 +159,7 @@ export class HomeComponent implements OnInit {
   }
 
   findUsers(){
+    // Find all users in database and extract current user. Used to upgrade or remove users
     this.httpClient.post(BACKEND_URL + '/findUsers', httpOptions).subscribe((data:any)=>{
       if (this.UsersArray[0]){
         this.UsersArray = []
@@ -169,6 +174,7 @@ export class HomeComponent implements OnInit {
   }
 
   delUser(user){
+    // Delete a specific user from the database
     this.httpClient.post(BACKEND_URL + '/delUser', [user], httpOptions).subscribe((data:any)=>{
       this.UsersArray = []
       for (let i = 0; i < data.length; i++){
@@ -180,12 +186,14 @@ export class HomeComponent implements OnInit {
   }
 
   findGroups(){
+    // Find all groups which the user if part of (if they are base users). Find all groups if they are SAs or GAs
     this.httpClient.post(BACKEND_URL + '/findGroups', [this.username, this.role], httpOptions).subscribe((data:any)=>{
       this.userGroups = data
     })
   }
 
   findChannels(group){
+    // Find all channels which the user is part of (if they are base users). Find all channels if they are SAs or GAs
       this.JoinChannel = '';
       this.activeGroup = group;
       this.httpClient.post(BACKEND_URL + '/findChannels', [this.username, this.activeGroup, this.role], httpOptions).subscribe((data:any)=>{
@@ -194,6 +202,7 @@ export class HomeComponent implements OnInit {
   }
 
   joinChannel(){    
+    // Joining a chat room with given group and channel variables.
     if (this.JoinChannel != ""){
       let room = this.activeGroup + "-" + this.JoinChannel;
       this.shared.changeMessage([this.activeGroup, this.JoinChannel]);
@@ -202,9 +211,9 @@ export class HomeComponent implements OnInit {
   }
 
   addGroup(){
+    // Adding a new group
     console.log(true)
     this.httpClient.post(BACKEND_URL + '/addGroup', [this.username], httpOptions).subscribe((data:any)=>{
-      // this.userChannels = data;
       if (data){
         this.findGroups();
       } else {
@@ -214,6 +223,7 @@ export class HomeComponent implements OnInit {
   }
 
   addChannel(){
+    // Adding a new channel to a given group
     this.httpClient.post(BACKEND_URL + '/addChannel', [this.activeGroup], httpOptions).subscribe((data:any)=>{
       if (data){
         this.findChannels(this.activeGroup);
@@ -224,6 +234,7 @@ export class HomeComponent implements OnInit {
   }
 
   deleteChannel(){
+    // Deleting a channel from a group
     this.httpClient.post(BACKEND_URL + '/deleteChannel', [this.activeGroup, this.JoinChannel], httpOptions).subscribe((data:any)=>{
       if (data){
         this.findChannels(this.activeGroup);
@@ -234,6 +245,7 @@ export class HomeComponent implements OnInit {
   }
 
   renameGroup() {
+    // Renaming a group
     if (!this.renameGroupForm){
       this.renameGroupForm = true;
       if (this.deleteFromGroupForm || this.inviteForm){
@@ -260,6 +272,7 @@ export class HomeComponent implements OnInit {
   }
 
   deleteGroup(){
+    // Deleting a group
     this.httpClient.post(BACKEND_URL + '/deleteGroup', [this.activeGroup], httpOptions).subscribe((data:any)=>{
       if (data){
         this.findGroups();
@@ -272,6 +285,7 @@ export class HomeComponent implements OnInit {
   }
 
   upgradeUser(user){
+    // Upgrading user to SA
     this.httpClient.post(BACKEND_URL + '/upgradeUser', [user], httpOptions).subscribe((data:any)=>{
       if(!data){
         alert("User is already a super admin");
@@ -282,6 +296,7 @@ export class HomeComponent implements OnInit {
   }
 
   inviteGroup(group){
+    // Find users to invite to group
     if (!this.inviteForm){
       this.httpClient.post(BACKEND_URL + '/findInvite', [group], httpOptions).subscribe((data:any)=>{
         if (data.length == 0){
@@ -300,6 +315,7 @@ export class HomeComponent implements OnInit {
   }
 
   sendGroupInvite(){
+    // Add a user to a group
     this.inviteForm = false;
     if (this.newInviteGroup != ""){
       this.httpClient.post(BACKEND_URL + '/sendGroupInvite', [this.newInviteGroup, this.activeGroup], httpOptions).subscribe((data:any)=>{
@@ -312,6 +328,7 @@ export class HomeComponent implements OnInit {
   }
 
   deleteFromGroup(){
+    // Find users to delete from a group
     if (!this.deleteFromGroupForm){
       this.httpClient.post(BACKEND_URL + '/deleteFromGroup', [this.activeGroup, this.username], httpOptions).subscribe((data:any)=>{
         if (data.length == 0){
@@ -334,6 +351,7 @@ export class HomeComponent implements OnInit {
   }
 
   sendDeleteFromGroup(){
+    // Remove user from group
     this.deleteFromGroupForm = false;
     if (this.newDeleteFromGroup != ""){
       this.httpClient.post(BACKEND_URL + '/sendDeleteFromGroup', [this.newDeleteFromGroup, this.activeGroup], httpOptions).subscribe((data:any)=>{
@@ -346,6 +364,7 @@ export class HomeComponent implements OnInit {
   }
 
   inviteChannel(group, channel){
+    // Find users to invite to a channel
     if (!this.inviteChannelForm){
       this.httpClient.post(BACKEND_URL + '/findChannelInvite', [group, channel], httpOptions).subscribe((data:any)=>{
         if (data.length == 0){
@@ -365,6 +384,7 @@ export class HomeComponent implements OnInit {
   }
 
   sendChannelInvite(user, group, channel){
+    // Invite user to a channel
     this.inviteChannelForm = false;
     if (user != ""){
       this.httpClient.post(BACKEND_URL + '/sendChannelInvite', [user, group, channel], httpOptions).subscribe((data:any)=>{
@@ -377,6 +397,7 @@ export class HomeComponent implements OnInit {
   }
 
   deleteUserFromChannel(channel){
+    // Find users to delete from a channel
     if (!this.deleteFromChannelForm){
       this.httpClient.post(BACKEND_URL + '/deleteFromChannel', [channel, this.activeGroup, this.username], httpOptions).subscribe((data:any)=>{
         if (data.length == 0){
@@ -396,6 +417,7 @@ export class HomeComponent implements OnInit {
   }
 
   sendDeleteFromChannel(){
+    // Delete a user from a channel
     this.deleteFromChannelForm = false;
     if (this.newDeleteFromChannel != ""){
       this.httpClient.post(BACKEND_URL + '/sendDeleteFromChannel', [this.JoinChannel, this.activeGroup, this.newDeleteFromChannel], httpOptions).subscribe((data:any)=>{
@@ -407,10 +429,12 @@ export class HomeComponent implements OnInit {
   }
 
   onFileSelected(event){
+    // Event handler for image upload
     this.selectedFile = event.target.files[0];
   }
 
   onUpload(){
+    // Structure image data and send to db
     const fd = new FormData();
     fd.append('image', this.selectedFile, this.selectedFile.name);
     

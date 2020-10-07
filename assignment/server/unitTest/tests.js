@@ -26,7 +26,7 @@ describe('Server testing', function() {
         
     });
     after(()=>{
-        // console.log("Hello", groups)
+        // console.log(groups)
         // chai.request(app)
         //     .post('/restoreDB').send(groups)
         //     .end((err, res) => {
