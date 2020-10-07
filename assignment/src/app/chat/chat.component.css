@@ -25,6 +25,6 @@ input[type=text]{
     justify-content: center;
 }
 .message{
-    height:200px;
+    height:40em;
     overflow-y: scroll;
 }

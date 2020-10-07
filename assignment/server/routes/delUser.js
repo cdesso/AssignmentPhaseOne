@@ -4,6 +4,7 @@ module.exports = function(db, app) {
         usersArray = [];
         var collection = db.collection('users');
         var collection2 = db.collection('userData');
+        // Delete users with specified username from both user DB collections.
         try{
             await collection.deleteOne({'username': uName});
             await collection2.deleteOne({'username': uName});

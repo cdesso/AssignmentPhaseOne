@@ -16,15 +16,6 @@ td{
     margin: 1.25%;
 }
 
-
-#userForm{
-    display: none;
-}
-
 .form-check-label{
     text-indent: 1.5em;
 }
-
-/* span > button{
-    margin-right: 5px;
-} */

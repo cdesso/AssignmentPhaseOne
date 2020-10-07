@@ -3,6 +3,7 @@ module.exports = function(db, app) {
         user = req.body[0];
         inviteGroup = req.body[1];
         var collection = db.collection('groups');
+        // add user to group's members array
         try{
             await collection.updateOne({'groupName': inviteGroup}, {$push: {'members': user}});
         } catch (err){

@@ -12,6 +12,7 @@ describe('AppComponent', () => {
         AppComponent
       ],
     }).compileComponents();
+    sessionStorage.clear();
   }));
 
   it('should create the app', () => {
@@ -19,17 +20,31 @@ describe('AppComponent', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
-
-  it(`should have as title 'assignment'`, () => {
+ 
+  it(`should have as title 'GrifChat'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('assignment');
+    expect(app.title).toEqual('GrifChat');
   });
 
-  it('should render title', () => {
+  it(`should call alert "You are not logged in!"`, () => {
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('assignment app is running!');
+    const app = fixture.componentInstance;
+    spyOn(window, "alert");
+
+    app.logout();
+
+    expect(window.alert).toHaveBeenCalledWith('You are not logged in!');
+  });
+
+  it(`should call alert "Successfully Logged out!"`, () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    const app = fixture.componentInstance;
+    sessionStorage.setItem('username', 'Super');
+    spyOn(window, "alert");
+    
+    app.logout();
+
+    expect(window.alert).toHaveBeenCalledWith('Successfully Logged out!');
   });
 });

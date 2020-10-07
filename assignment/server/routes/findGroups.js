@@ -1,23 +1,3 @@
-// var fs = require('fs');
-
-// module.exports = function(req, res) {
-//     uName = req.body[0]
-//     role = req.body[1]
-//     userGroups = []
-//     fs.readFile('./data/groups.json', 'utf8', function(err, data){
-//         if (err) throw err;
-//         let groups = JSON.parse(data);
-//         for (i in groups){
-//             if ( (groups[i].members.includes(uName)) || (role == "SA" || role == "GA") ){
-//                 if (!userGroups.includes(groups[i].groupName)){
-//                     userGroups.push(groups[i].groupName);
-//                 }
-//             }
-//         }
-//         res.send(userGroups);
-//     })
-// }
-
 module.exports = function(db, app) {
     app.post('/findGroups', async function(req, res){
         uName = req.body[0];
@@ -25,13 +5,14 @@ module.exports = function(db, app) {
         userGroups = [];
 
         var collection = db.collection('groups');        
-
+        // If the user is a SA or GA, find all groups in DB (they do not have to be listed as a member)
         if (role == "SA" || role == "GA"){
             groups = await collection.find({}).toArray();
             for (i in groups){
                 userGroups.push(groups[i].groupName);
             }
             res.send(userGroups);
+        // Otherwise, find the groups which they are listed as a member.
         } else {
             groups = await collection.find({'members': uName}).toArray();
             for (i in groups){

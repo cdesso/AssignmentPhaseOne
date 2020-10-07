@@ -75,43 +75,29 @@ export class HomeComponent implements OnInit {
 
   openChannelAdmin(){
     if(!this.channelAdmin){
-      this.groupAdmin = false;
-      document.getElementById("groupButton").style.backgroundColor = "";
-      this.inviteForm = false;
-      this.deleteFromGroupForm = false;
       this.channelAdmin = true;
-      document.getElementById("channelButton").style.backgroundColor = "#0000ff";
     } else{
       this.channelAdmin = false;
-      document.getElementById("channelButton").style.backgroundColor = "";
       this.inviteChannelForm = false;
       this.deleteFromChannelForm = false;
     }
   }
+  
   openGroupAdmin(){
     if(!this.groupAdmin){
-      this.channelAdmin = false;
-      document.getElementById("channelButton").style.backgroundColor = "";
-      this.inviteChannelForm = false;
-      this.deleteFromChannelForm = false;
       this.groupAdmin = true;
-      document.getElementById("groupButton").style.backgroundColor = "#0000ff";
-
     } else{
       this.groupAdmin = false;
       this.inviteForm = false;
       this.deleteFromGroupForm = false;
-      document.getElementById("groupButton").style.backgroundColor = "";
     }
   }
 
   newUserForm(){
     if (!this.userForm){
       this.userForm = true;
-      document.getElementById("userForm").style.display = "block";
     } else {
       this.userForm = false;
-      document.getElementById("userForm").style.display = "none";
     }
   }
 
@@ -216,6 +202,7 @@ export class HomeComponent implements OnInit {
   }
 
   addGroup(){
+    console.log(true)
     this.httpClient.post(BACKEND_URL + '/addGroup', [this.username], httpOptions).subscribe((data:any)=>{
       // this.userChannels = data;
       if (data){
@@ -225,6 +212,7 @@ export class HomeComponent implements OnInit {
       }
     })
   }
+
   addChannel(){
     this.httpClient.post(BACKEND_URL + '/addChannel', [this.activeGroup], httpOptions).subscribe((data:any)=>{
       if (data){
@@ -393,7 +381,7 @@ export class HomeComponent implements OnInit {
       this.httpClient.post(BACKEND_URL + '/deleteFromChannel', [channel, this.activeGroup, this.username], httpOptions).subscribe((data:any)=>{
         if (data.length == 0){
           this.deleteFromChannelForm = false;
-          alert("No users left to invite")
+          alert("No users left to remove")
         } else {
         this.deleteUsersFromChannel = data
         }

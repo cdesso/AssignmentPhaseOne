@@ -6,8 +6,11 @@
         <div class="row">
             <div class="col-sm-8 chat">
                 <div class="row justify-content-between" style="margin-top: 1.25em;">
-                    <button (click)="leaveRoom()" class="btn btn-primary">Leave chat</button>
+                    <button (click)="leaveRoom()" id="leaveRoom" class="btn btn-primary">Leave chat</button>
                     <h5 class="text-info">{{roomNotice}}</h5>
+                </div>
+                <div class="row justify-content-end text-info" id="counter">
+                    Active users in channel: {{userCount}}
                 </div>
                 <div class="col-12 message">
                     <div class="row" *ngFor="let message of messages" style="margin-top: 0.5em;">
@@ -15,10 +18,10 @@
                             <img src="../../assets/images/user.png">
                         </div>
                         <div class="col-sm-8">
-                            <div class="row uName">
+                            <div class="row uName text-info">
                                 {{message[0]}}
                             </div>
-                            <div class="row content">
+                            <div class="row content text-info">
                                 {{message[1]}}                    
                             </div>
                         </div>

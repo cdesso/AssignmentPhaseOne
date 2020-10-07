@@ -10,6 +10,7 @@ module.exports = {
         var collection = db.collection('groups');
 
         chat.on('connection', async (socket) => {
+            // Find all groups and create rooms based on groupName and channelName
             groups = await collection.find({}).toArray();
             for (i in groups){
                 for (j in groups[i].channels){
@@ -18,11 +19,13 @@ module.exports = {
             }
 
             socket.on('message', async (message)=> {
+                // When a message is sent, find the correct socket ID
                 for (i=0; i<socketRoom.length; i++){
                     if (socketRoom[i][0] == socket.id){
-                        groupChannel = socketRoom[i][1].split('-');
+                        groupChannel = socketRoom[i][1].split('-');   // Fetch group and channel names
                         try{
                             if (message[0] && message[1]){
+                                // Append message to group's channel's messages array
                                 await collection.updateOne(
                                     {'$and': [
                                         {'groupName': groupChannel[0]}, 
@@ -30,6 +33,7 @@ module.exports = {
                                     ]}, 
                                     {'$push':{'channels.$.messages': message}})
                                 }
+                            // Find all messages in current room
                             groups = await collection.find({'$and': [
                                 {'groupName': groupChannel[0]}, 
                                 {'channels.channelName': groupChannel[1]}
@@ -37,13 +41,14 @@ module.exports = {
                         } catch (err){
                             throw err;
                         }
-                        
+                        // return chat messages to front-end
                         chat.to(socketRoom[i][1]).emit('message', groups[0].channels[0].messages);
                     }
                 }
             })
         
             socket.on('userCount', (room) => {
+                // Count the number of sockets (users) connected to each room
                 var count = 0
                 for (i=0; i<socketRoomnum.length;i++){
                     if (socketRoomnum[i][0] == room){
@@ -55,6 +60,7 @@ module.exports = {
             })
     
             socket.on('joinRoom', (data)=>{ 
+                // Joining rooms
                 room = data[0]
                 user = data[1]         
                 if (rooms.includes(room)){
@@ -62,6 +68,7 @@ module.exports = {
                         var inroomSocketArray = false;
                         
                         for (i=0; i<socketRoom.length; i++){
+                            // track who is in each room
                             if (socketRoom[i][0] == socket.id){
                                 socketRoom[i][1] = room;
                                 inroom = true;
@@ -71,13 +78,14 @@ module.exports = {
                             //add socketID/room record
                             socketRoom.push([socket.id, room]);
                             var hasroomnum = false
+                            //recalculate number of users in a room
                             for (let j=0; j<socketRoomnum.length; j++){
                                 if (socketRoomnum[j][0] == room){
                                     socketRoomnum[j][1] += 1;
                                     hasroomnum = true;
                                 }
                             }
-
+                            // start tracking numbers of users in a room if it has not been done before
                             if (hasroomnum == false){
                                 socketRoomnum.push([room, 1]);
                             }
@@ -87,7 +95,7 @@ module.exports = {
                     return chat.in(room).emit('joined', room);
                 }
             })
-
+            // leaving rooms
             socket.on('leaveRoom', (data) => {
                 room = data[0]
                 user = data[1]
@@ -108,9 +116,10 @@ module.exports = {
                     }
                 }
             });
-
+            // User disconnection handling.
             socket.on('disconnect', ()=>{
                 chat.emit('disconnect');
+                console.log(socket.id)
                 for (let i=0; i<socketRoom.length; i++){
                     if (socketRoom[i][0] == socket.id){
                         socketRoom.splice(i, 1);

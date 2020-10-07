@@ -2,7 +2,7 @@ module.exports = function(db, app, formidable) {
     app.post('/api/upload', function(req, res){
         var form = new formidable.IncomingForm({ uploadDir: './userImages' });
         form.keepExtensions = true;
-
+        // When error occurs, throw error
         form.on('error', function(err){
             throw err;
             res.send({
@@ -11,11 +11,11 @@ module.exports = function(db, app, formidable) {
                 message: 'Unable to upload'
             })
         });
-
+        // When file is uploaded, change the file path to ./userImages/<filename>
         form.on('fileBegin', function(name, file){
             file.path = form.uploadDir + "/" + file.name;
         });
-
+        //When file is uploaded, send back the filename along with a result and message
         form.on('file', function(field, file){
             res.send({
                 result: 'OK',

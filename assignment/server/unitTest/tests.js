@@ -10,6 +10,28 @@ chai.use(chaiHttp);
 
 describe('Server testing', function() {
     //Login Testing
+    groups = [];
+    before(()=>{
+        chai.request(app)
+            .get('/getDB')
+            .end((err, res) => {
+                groups.push(res.body);
+                console.log(groups)
+            });
+        chai.request(app)
+            .post('/clearDB')
+            .send().end((err, res) => {})
+
+        
+        
+    });
+    after(()=>{
+        // console.log("Hello", groups)
+        // chai.request(app)
+        //     .post('/restoreDB').send(groups)
+        //     .end((err, res) => {
+        //     });
+    })
     describe('/api/auth', () => {
         it('it should return an array of the user details', (done) => {
             chai.request(app)
@@ -33,7 +55,57 @@ describe('Server testing', function() {
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.should.be.eql({})
+                    res.body.should.be.eql({});
+                    done();
+                });
+        });
+    });
+
+    //addGroup route testing
+    describe('/addGroup', () => {
+        it('it should return true', (done) => {
+            chai.request(app)
+                .post('/addGroup').send(['super'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql(true);
+                    done();
+                });
+        });
+    });
+
+    //renameGroup route testing
+    describe('/renameGroup', () => {
+        it('it should return an array', (done) => {
+            chai.request(app)
+                .post('/renameGroup').send(['Group1', 'Main'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql([true, 'Main']);
+                    done();
+                });
+        });
+    });
+    describe('/renameGroup', () => {
+        it('it should return false', (done) => {
+            chai.request(app)
+                .post('/renameGroup').send(['Main', 'grp'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql(false);
+                    done();
+                });
+        });
+    });
+
+    //addChannel route testing
+    describe('/addChannel', () => {
+        it('it should return true', (done) => {
+            chai.request(app)
+                .post('/addChannel').send(['Main'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql(true);
                     done();
                 });
         });
@@ -83,6 +155,110 @@ describe('Server testing', function() {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.eql([])
+                    done();
+                });
+        });
+    });
+
+    //findInvite route testing
+    describe('/findInvite', () => {
+        it('it should return an array', (done) => {
+            chai.request(app)
+                .post('/findInvite').send(['Main'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    done();
+                });
+        });
+    });
+
+    //findChannelInvite route testing
+    describe('/findChannelInvite', () => {
+        it('it should return an array', (done) => {
+            chai.request(app)
+                .post('/findChannelInvite').send(['Main', 'General'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    done();
+                });
+        });
+    });
+
+    //sendGroupInvite route testing
+    describe('/sendGroupInvite', () => {
+        it('it should return true', (done) => {
+            chai.request(app)
+                .post('/sendGroupInvite').send(['newUser', 'Main'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql(true);
+                    done();
+                });
+        });
+    });
+
+    //deleteFromGroup route testing
+    describe('/deleteFromGroup', () => {
+        it('it should return an array', (done) => {
+            chai.request(app)
+                .post('/deleteFromGroup').send(['Main', 'super'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    done();
+                });
+        });
+    });
+
+    //sendDeleteFromGroup route testing
+    describe('/sendDeleteFromGroup', () => {
+        it('it should return true', (done) => {
+            chai.request(app)
+                .post('/sendDeleteFromGroup').send(['newUser', 'Main'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql(true);
+                    done();
+                });
+        });
+    });
+
+    //sendChannelInvite route testing
+    describe('/sendChannelInvite', () => {
+        it('it should return true', (done) => {
+            chai.request(app)
+                .post('/sendChannelInvite').send(['newUser', 'Main', 'General'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql(true);
+                    done();
+                });
+        });
+    });
+
+    //deleteFromChannel route testing
+    describe('/deleteFromChannel', () => {
+        it('it should return an Array', (done) => {
+            chai.request(app)
+                .post('/deleteFromChannel').send(['General', 'Main', 'super'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    done();
+                });
+        });
+    });
+
+    //sendDeleteFromChannel route testing
+    describe('/sendDeleteFromChannel', () => {
+        it('it should return true', (done) => {
+            chai.request(app)
+                .post('/sendDeleteFromChannel').send(['General', 'Main', 'newUser'])
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.eql(true);
                     done();
                 });
         });
@@ -192,64 +368,14 @@ describe('Server testing', function() {
         });
     });
 
-    //findInvite route testing
-    describe('/findInvite', () => {
-        it('it should return an array', (done) => {
-            chai.request(app)
-                .post('/findInvite').send(['Main'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    done();
-                });
-        });
-    });
-
-    //findChannelInvite route testing
-    describe('/findChannelInvite', () => {
-        it('it should return an array', (done) => {
-            chai.request(app)
-                .post('/findChannelInvite').send(['Main', 'General'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    done();
-                });
-        });
-    });
-
-    //addGroup route testing
-    describe('/addGroup', () => {
+    //deleteChannel route testing
+    describe('/deleteChannel', () => {
         it('it should return true', (done) => {
             chai.request(app)
-                .post('/addGroup').send(['super'])
+                .post('/deleteChannel').send(['Main', 'Channel2'])
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.eql(true);
-                    done();
-                });
-        });
-    });
-
-    //renameGroup route testing
-    describe('/renameGroup', () => {
-        it('it should return an array', (done) => {
-            chai.request(app)
-                .post('/renameGroup').send(['Group4', 'New Group'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql([true, 'New Group']);
-                    done();
-                });
-        });
-    });
-    describe('/renameGroup', () => {
-        it('it should return false', (done) => {
-            chai.request(app)
-                .post('/renameGroup').send(['New Group', 'grp'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql(false);
                     done();
                 });
         });
@@ -259,72 +385,7 @@ describe('Server testing', function() {
     describe('/deleteGroup', () => {
         it('it should return true', (done) => {
             chai.request(app)
-                .post('/deleteGroup').send(['New Group'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql(true);
-                    done();
-                });
-        });
-    });
-
-    //addChannel route testing
-    describe('/addChannel', () => {
-        it('it should return true', (done) => {
-            chai.request(app)
-                .post('/addChannel').send(['Main'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql(true);
-                    done();
-                });
-        });
-    });
-
-    //deleteChannel route testing
-    describe('/deleteChannel', () => {
-        it('it should return true', (done) => {
-            chai.request(app)
-                .post('/deleteChannel').send(['Main', 'Channel4'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql(true);
-                    done();
-                });
-        });
-    });
-
-    //sendGroupInvite route testing
-    describe('/sendGroupInvite', () => {
-        it('it should return true', (done) => {
-            chai.request(app)
-                .post('/sendGroupInvite').send(['newUser', 'Main'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql(true);
-                    done();
-                });
-        });
-    });
-
-    //deleteFromGroup route testing
-    describe('/deleteFromGroup', () => {
-        it('it should return an array', (done) => {
-            chai.request(app)
-                .post('/deleteFromGroup').send(['Main', 'super'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    done();
-                });
-        });
-    });
-
-    //sendDeleteFromGroup route testing
-    describe('/sendDeleteFromGroup', () => {
-        it('it should return true', (done) => {
-            chai.request(app)
-                .post('/sendDeleteFromGroup').send(['newUser', 'Main'])
+                .post('/deleteGroup').send(['Main'])
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.eql(true);
@@ -351,45 +412,6 @@ describe('Server testing', function() {
         it('it should return true', (done) => {
             chai.request(app)
                 .post('/upgradeUser').send(['newUser'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql(true);
-                    done();
-                });
-        });
-    });
-
-    //sendChannelInvite route testing
-    describe('/sendChannelInvite', () => {
-        it('it should return true', (done) => {
-            chai.request(app)
-                .post('/sendChannelInvite').send(['newUser', 'Main', 'General'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.eql(true);
-                    done();
-                });
-        });
-    });
-
-    //deleteFromChannel route testing
-    describe('/deleteFromChannel', () => {
-        it('it should return an Array', (done) => {
-            chai.request(app)
-                .post('/deleteFromChannel').send(['General', 'Main', 'super'])
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.a('array');
-                    done();
-                });
-        });
-    });
-
-    //sendDeleteFromChannel route testing
-    describe('/sendDeleteFromChannel', () => {
-        it('it should return true', (done) => {
-            chai.request(app)
-                .post('/sendDeleteFromChannel').send(['General', 'Main', 'newUser'])
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.eql(true);

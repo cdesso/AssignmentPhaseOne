@@ -3,7 +3,7 @@ module.exports = function(db, app) {
         uName = req.body[0];
         var collection = db.collection('groups');
 
-        count = await collection.countDocuments({});
+        count = await collection.countDocuments({});   // Count the number of groups in DB
         newGroup = {'groupName': ("Group" + (count + 1)), 
                     "members": [], 
                     "channels": [{
@@ -11,12 +11,12 @@ module.exports = function(db, app) {
                         "members": [{"username": uName}],
                         "messages": []
                     }]
-                    };
-        exist = await collection.find({'groupName': newGroup.groupName}).toArray()
+                    };   // Create new group data
+        exist = await collection.find({'groupName': newGroup.groupName}).toArray()   // See if groupName already exists in DB
         if (exist.length > 0){  res.send(false);  }
         else{
             try{
-                await collection.insertOne(newGroup);
+                await collection.insertOne(newGroup);   // If not exist, add group to DB
             } catch (err){
                 throw err;
             }

@@ -32,21 +32,22 @@ export class LoginComponent implements OnInit {
     // if data is returned with a valid value of true, reset error message, 
     // put data in session storage and route to account page.
     // else, prompt incorrect inputs and reset input fields.
-    let user = {username: this.username, password: this.password};
-    
-    this.httpClient.post(BACKEND_URL + '/api/auth', user, httpOptions).subscribe((data:any)=>{
-      if (data){
-        this.error = "";
-        sessionStorage.setItem('username', data.username);
-        sessionStorage.setItem('role', data.role);
-        this.router.navigateByUrl('');
-      }
-      else {
-        this.error = "Invalid username or password"
-        this.username = "";
-        this.password = "";
-      }
-    });
+    if(this.username != "" && this.password != ""){
+      let user = {username: this.username, password: this.password};
+      this.httpClient.post(BACKEND_URL + '/api/auth', user, httpOptions).subscribe((data:any)=>{
+        if (data){
+          this.error = "";
+          sessionStorage.setItem('username', data.username);
+          sessionStorage.setItem('role', data.role);
+          this.router.navigateByUrl('');
+        } else {
+          this.error = "Invalid username or password"
+          this.username = "";
+          this.password = "";
+        }
+      })
+    } else {
+      this.error = "Invalid username or password"
+    } 
   }
-
 }

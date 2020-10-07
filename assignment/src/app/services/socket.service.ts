@@ -35,7 +35,6 @@ export class SocketService {
   }
 
   send(user, message): void {
-    console.log(user, message);
     this.socket.emit('message', [user, message]);
   }
 
